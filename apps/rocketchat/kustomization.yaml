@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: rocketchat
+
+helmCharts:
+  - name: rocketchat
+    repo: https://rocketchat.github.io/helm-charts
+    version: 6.25.3
+    releaseName: rocketchat
+    namespace: rocketchat
+    valuesFile: values.yaml
