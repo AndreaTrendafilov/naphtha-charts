@@ -1,120 +1,42 @@
-# wg-easy - values.yaml
-
-# wireguard
-wireguard:
-  enabled: true
-
-replicaCount: 1
-
 image:
-  registry: ghcr.io
-  repository: wg-easy/wg-easy
-  tag: "15.1.0"
-
-# --- Unattended setup for v15+ ---
-init:
-  enabled: true
-  username: "admin"
-  password: "Very$tr0ngP@ssword3xBett%"
-
-  # Clients will connect to this DNS name (or your public IP)
-  host: "vpn.naphtha.dev"
-
-  # WireGuard public UDP port
-  port: 51820
-
-  # DNS given to peers
-  dns: "1.1.1.1,8.8.8.8"
-
-  # VPN network
-  ipv4Cidr: "10.8.0.0/24"
-  # ipv6Cidr: "fd00:1234:abcd::/64" # optional
+  repository: ghcr.io/wg-easy/wg-easy
+  # tag: latest
 
 env:
-  # If you expose a different external UDP port than 51820,
-  # set this so generated peer configs advertise the right port.
-  WG_PORT: "51820"
-  # WG_ALLOWED_IPS: "0.0.0.0/0, ::/0"
+  WG_HOST: wg.naphtha.dev
+  # PASSWORD_HASH: ""  # optional: bcrypt admin password hash
 
-webUI:
-  lang: "en"
-  trafficStats: true
-  chartType: 1
-  maxAge: 1440
-  prometheusMetrics: false
-
-# Persistence (recommended)
-persistence:
-  enabled: true
-  size: 1Gi
-  # storageClassName: "local-path"  # uncomment to pin on k3s default
-
-# --- Security / kernel requirements ---
-pod:
-  securityContext:
-    sysctls:
-      - name: net.ipv4.ip_forward
-        value: "1"
-      - name: net.ipv6.conf.all.forwarding
-        value: "1"
-  hostPaths:
-    - name: lib-modules
-      hostPath: /lib/modules
-      mountPath: /lib/modules
-      readOnly: true
-  capabilities:
-    add:
-      - NET_ADMIN
-      - SYS_MODULE
-
-# --- Services ---
 service:
-  # WireGuard UDP service (clients connect here)
-  wireguard:
-    enabled: true
-    type: LoadBalancer # k3s/klipper-lb supports UDP
-    externalTrafficPolicy: Local
-    ports:
-      - name: wireguard
-        protocol: UDP
-        port: 51820
-        targetPort: 51820
+  type: NodePort
+  ports:
+    wireguard:
+      port: 51820
+      protocol: UDP
+      nodePort: 51820
+    http:
+      port: 51821
+      protocol: TCP
+      nodePort: 31821
 
-  # Web UI service (container listens on 51821)
-  ui:
-    enabled: true
-    type: ClusterIP
-    ports:
-      - name: http
-        protocol: TCP
-        port: 51821
-        targetPort: 51821
-
-    # OPTIONAL: expose UI on node IP :8080 (HTTP) instead of Ingress+TLS
-    # type: NodePort
-    # nodePort: 8080
-
-# --- Ingress via Traefik + cert-manager (HTTPS on 443) ---
 ingress:
   enabled: true
-  className: "traefik"
-  hostname: "vpn-ui.naphtha.dev" # UI lives on this subdomain
   annotations:
-    kubernetes.io/ingress.class: "traefik"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
-    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  hosts:
+    - host: wg.naphtha.dev
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: wg-easy
+              port:
+                number: 51821
   tls:
     - secretName: wg-easy-tls
       hosts:
-        - "vpn-ui.naphtha.dev"
-  rules:
-    - host: "vpn-ui.naphtha.dev"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: ui
-                port: 51821
+        - wg.naphtha.dev
+
+persistence:
+  enabled: true
+  size: 1Gi
