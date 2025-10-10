@@ -1,6 +1,0 @@
-apiVersion: v2
-name: wireguard
-description: WireGuard VPN server with web UI for AKS cluster access
-type: application
-version: 0.1.0
-appVersion: "15.1.0"
