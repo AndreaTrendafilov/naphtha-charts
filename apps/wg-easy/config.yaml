@@ -9,4 +9,4 @@ chart:
   repoURL: git@github.com:AndreaTrendafilov/naphtha-charts.git
   path: charts/wireguard
   version: main
-  valueFiles: ../apps/wg-easy/values.yaml
+  valueFiles: ../../apps/wg-easy/values.yaml
