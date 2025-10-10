@@ -35,7 +35,7 @@ spec:
               service:
                 name: {{ include "wg-easy.fullname" . }}-ui
                 port:
-                  number: {{ .Values.service.ui.ports.http | default 51821 }}
+                  number: {{ $.Values.service.ui.port | default 51821 }}
     {{- /* Optional extra hosts */ -}}
     {{- range .Values.ingress.extraHosts }}
     - host: {{ .host | quote }}

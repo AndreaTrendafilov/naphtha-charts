@@ -1,6 +1,4 @@
-# wireguard
-wireguard:
-  enabled: false
+# charts/wireguard - values.yaml
 
 replicaCount: 1
 
@@ -8,98 +6,93 @@ image:
   registry: ghcr.io
   repository: wg-easy/wg-easy
   tag: "15.1.0"
+  pullPolicy: IfNotPresent
 
+# ---- Services (match templates/service.yaml & templates/ingress.yaml) ----
 service:
-  type: LoadBalancer
-  vpnPort: 51820
-  # External port for VPN (443 for HTTPS, 80 for HTTP)
-  vpnExternalPort: 443
-  webPort: 51821
-  # External IP configuration
-  externalIP:
-    enabled: false
-    staticIP: null
-  externalDNS:
-    enabled: false
-    hostname: ""
-  # Web UI external DNS (for internal access)
-  webExternalDNS:
-    enabled: false
-    hostname: ""
-  # Web UI external IP configuration
-  webExternalIP:
-    enabled: false
-    staticIP: null
+  # Ports the container exposes (deployment.yaml)
+  vpnPort: 51820 # UDP port WireGuard listens on IN the pod
+  webPort: 51821 # TCP port UI listens on IN the pod (wg-easy default)
 
+  # WireGuard UDP Service (LoadBalancer)
+  wireguard:
+    enabled: true
+    type: LoadBalancer
+    externalTrafficPolicy: Local
+    port: 51820 # Service port (external LB)
+    targetPort: 51820 # Pod target port
+    annotations: {} # e.g. external-dns.alpha.kubernetes.io/hostname: vpn.naphtha.dev
+  commonAnnotations: {}
+
+  # Web UI Service (fronted by Ingress)
+  ui:
+    enabled: true
+    type: ClusterIP
+    port: 51821 # Service port (ClusterIP)
+    targetPort: 51821 # Pod target port
+    # nodePort: 8080     # uncomment only if type: NodePort
+    annotations: {}
+    # Keep this to satisfy ingress.yaml which reads .Values.service.ui.ports.http
+    ports:
+      http: 51821
+    # externalTrafficPolicy only applies to NodePort/LoadBalancer; harmless if ClusterIP
+    externalTrafficPolicy: ClusterIP
+
+# ---- Ingress (match templates/ingress.yaml) ----
 ingress:
-  enabled: false
-  host: ""
+  enabled: true
+  className: "traefik"
+  hostname: "ui.vpn.naphtha.dev"
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+  tls:
+    - secretName: wg-easy-tls
+      hosts:
+        - "ui.vpn.naphtha.dev"
+  # Optional extra hosts for the same service
+  # extraHosts:
+  #   - host: "alt-ui.vpn.naphtha.dev"
+  #     path: "/"
 
-wireguardConfig:
-  # WireGuard server host - should be the public IP or domain
-  host: ""
-  # Default DNS servers for clients - using Azure private DNS
-  defaultDns: "168.63.129.16"
-  # VPN IPv4 subnet
-  subnet: "10.8.0.0/24"
-  # VPN IPv6 subnet (disabled due to missing kernel modules)
-  ipv6Subnet: "fd42:42:42::/64"
-  # Split tunneling - only route VNet subnets + DNS (NOT 0.0.0.0/0)
-  allowedIPs: "10.100.0.0/16,168.63.129.16/32"
+# ---- Persistence (deployment.yaml + pvc.yaml) ----
+persistence:
+  enabled: true
+  size: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: "" # set to "local-path" on k3s if you want to pin it
 
-# wg-easy v15 unattended setup
+# ---- wg-easy unattended setup (deployment.yaml envs) ----
 init:
   enabled: true
   username: "admin"
-  password: "megasecureforwireguard"
+  password: "CHANGE_ME_very_strong_password"
 
-webUI:
-  # Web UI language
-  lang: "en"
-  # Enable traffic stats
-  trafficStats: true
-  # Chart type (0=disabled, 1=line, 2=area, 3=bar)
-  chartType: 1
-  # Max age for stats in minutes
-  maxAge: 1440
-  # Enable Prometheus metrics
-  prometheusMetrics: false
+# ---- WireGuard server & peer defaults (deployment.yaml envs) ----
+wireguardConfig:
+  host: "vpn.naphtha.dev" # public DNS the clients connect to
+  defaultDns: "1.1.1.1,8.8.8.8" # pushed to peers
+  subnet: "10.8.0.0/24" # IPv4 CIDR handed to peers
+  ipv6Subnet: "" # leave empty if you don't use IPv6
+  # allowedIPs: "0.0.0.0/0, ::/0"        # optional default AllowedIPs for peers
 
-persistence:
-  enabled: true
-  storageClass: ""
-  accessMode: ReadWriteOnce
-  size: 1Gi
+# ---- Pod security & kernel settings (deployment.yaml) ----
+securityContext: {} # container-level (left empty; chart hardcodes NET_ADMIN via other means)
+resources: {} # requests/limits if you want them
 
-resources:
-  limits:
-    cpu: 500m
-    memory: 512Mi
-  requests:
-    cpu: 100m
-    memory: 128Mi
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
-
-# Enable host networking for better VNet integration
-hostNetwork: false
-
-securityContext:
-  capabilities:
-    add:
-      - NET_ADMIN
-      - SYS_MODULE
-  privileged: true
-
-podSecurityContext:
-  fsGroup: 1000
-
+# sysctls initContainer runs these if provided
 sysctls:
   - name: net.ipv4.conf.all.src_valid_mark
     value: "1"
   - name: net.ipv4.ip_forward
     value: "1"
+
+# Standard k8s knobs (deployment.yaml 'with' blocks)
+nodeSelector: {}
+tolerations: []
+affinity: {}
+# (Optional) extra labels/annotations could be added as you need
+
