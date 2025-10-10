@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: apps
+  namespace: argocd
+spec:
+  # Project description
+  description: ArgoCD Project for Application Resources
+
+  # Allow manifests to deploy from any Git repos
+  sourceRepos:
+    - git@github.com:AndreaTrendafilov/naphtha-charts.git
+
+  # Only permit applications to deploy to the guestbook namespace in the same cluster
+  destinations:
+    - namespace: "*"
+      server: https://kubernetes.default.svc
+
+  # Deny all cluster-scoped resources from being created, except for Namespace
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
