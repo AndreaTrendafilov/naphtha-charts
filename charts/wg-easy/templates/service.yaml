@@ -1,0 +1,68 @@
+{{- /* WireGuard UDP service (clients connect here) */ -}}
+{{- if .Values.service.wireguard.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "wg-easy.fullname" . }}-vpn
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "wg-easy.labels" . | nindent 4 }}
+  {{- if or .Values.service.wireguard.annotations .Values.service.commonAnnotations }}
+  annotations:
+    {{- with .Values.service.commonAnnotations }}
+{{ toYaml . | indent 4 }}
+    {{- end }}
+    {{- with .Values.service.wireguard.annotations }}
+{{ toYaml . | indent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.wireguard.type | default "LoadBalancer" }}
+  {{- if hasKey .Values.service.wireguard "externalTrafficPolicy" }}
+  externalTrafficPolicy: {{ .Values.service.wireguard.externalTrafficPolicy }}
+  {{- end }}
+  ports:
+    - name: wireguard
+      protocol: UDP
+      port: {{ .Values.service.wireguard.port | default 51820 }}
+      targetPort: {{ .Values.service.wireguard.targetPort | default 51820 }}
+  selector:
+    {{- include "wg-easy.selectorLabels" . | nindent 4 }}
+---
+{{- end }}
+
+{{- /* Web UI service (Traefik Ingress -> this service) */ -}}
+{{- if .Values.service.ui.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "wg-easy.fullname" . }}-ui
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "wg-easy.labels" . | nindent 4 }}
+  {{- if or .Values.service.ui.annotations .Values.service.commonAnnotations }}
+  annotations:
+    {{- with .Values.service.commonAnnotations }}
+{{ toYaml . | indent 4 }}
+    {{- end }}
+    {{- with .Values.service.ui.annotations }}
+{{ toYaml . | indent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.ui.type | default "ClusterIP" }}
+  {{- if and (eq (.Values.service.ui.type | default "ClusterIP") "NodePort") (.Values.service.ui.nodePort) }}
+  externalTrafficPolicy: {{ .Values.service.ui.externalTrafficPolicy | default "ClusterIP" | quote }}
+  {{- end }}
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.ui.port | default 51821 }}
+      targetPort: {{ .Values.service.ui.targetPort | default 51821 }}
+      {{- if and (eq (.Values.service.ui.type | default "ClusterIP") "NodePort") (.Values.service.ui.nodePort) }}
+      nodePort: {{ .Values.service.ui.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "wg-easy.selectorLabels" . | nindent 4 }}
+{{- end }}
+
