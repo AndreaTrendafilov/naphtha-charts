@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: wg-easy
+
+helmCharts:
+  - name: wg-easy
+    repo: https://raw.githubusercontent.com/hansehe/wg-easy-helm/master/helm/charts
+    version: 0.1.3
+    releaseName: wg-easy
+    namespace: wg-easy
+    valuesFile: values.yaml
