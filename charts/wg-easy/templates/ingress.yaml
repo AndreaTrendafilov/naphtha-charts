@@ -4,11 +4,9 @@ kind: Ingress
 metadata:
   name: {{ include "wg-easy.fullname" . }}-ui
   namespace: {{ .Release.Namespace }}
-  {{- if or .Values.ingress.className .Values.ingress.annotations }}
+  {{- if .Values.ingress.annotations }}
   annotations:
-    {{- with .Values.ingress.annotations }}
-{{ toYaml . | indent 4 }}
-    {{- end }}
+{{ toYaml .Values.ingress.annotations | indent 4 }}
   {{- end }}
 spec:
   {{- if .Values.ingress.className }}
@@ -25,7 +23,6 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- /* Primary host */ -}}
     - host: {{ .Values.ingress.hostname | quote }}
       http:
         paths:
@@ -35,8 +32,8 @@ spec:
               service:
                 name: {{ include "wg-easy.fullname" . }}-ui
                 port:
-                  number: {{ $.Values.service.ui.port | default 51821 }}
-    {{- /* Optional extra hosts */ -}}
+                  number: {{ .Values.service.ui.port | default 51821 }}
+  {{- if .Values.ingress.extraHosts }}
     {{- range .Values.ingress.extraHosts }}
     - host: {{ .host | quote }}
       http:
@@ -47,7 +44,8 @@ spec:
               service:
                 name: {{ include "wg-easy.fullname" $ }}-ui
                 port:
-                  number: {{ $.Values.service.ui.ports.http | default 51821 }}
+                  number: {{ $.Values.service.ui.port | default 51821 }}
     {{- end }}
+  {{- end }}
 {{- end }}
 

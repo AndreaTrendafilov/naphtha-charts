@@ -1,104 +1,40 @@
-# wg-easy - values.yaml
-
-# wireguard
-wireguard:
-  enabled: true
-
 replicaCount: 1
 
 image:
   registry: ghcr.io
   repository: wg-easy/wg-easy
   tag: "15.1.0"
+  pullPolicy: IfNotPresent
 
-# --- Unattended setup for v15+ ---
-init:
-  enabled: true
-  username: "admin"
-  password: "Very$str0ngP@ssw0rd,22"
-
-  # Clients will connect to this DNS name (or your public IP)
-  host: "vpn.naphtha.dev"
-
-  # WireGuard public UDP port
-  port: 51820
-
-  # DNS given to peers
-  dns: "1.1.1.1,8.8.8.8"
-
-  # VPN network
-  ipv4Cidr: "10.8.0.0/24"
-  # ipv6Cidr: "fd00:1234:abcd::/64" # optional
-
-env:
-  # If you expose a different external UDP port than 51820,
-  # set this so generated peer configs advertise the right port.
-  WG_PORT: "51820"
-  # WG_ALLOWED_IPS: "0.0.0.0/0, ::/0"
-
-webUI:
-  lang: "en"
-  trafficStats: true
-  chartType: 1
-  maxAge: 1440
-  prometheusMetrics: false
-
-# Persistence (recommended)
-persistence:
-  enabled: true
-  size: 1Gi
-  # storageClassName: "local-path"  # uncomment to pin on k3s default
-
-# --- Security / kernel requirements ---
-pod:
-  securityContext:
-    sysctls:
-      - name: net.ipv4.ip_forward
-        value: "1"
-      - name: net.ipv6.conf.all.forwarding
-        value: "1"
-  hostPaths:
-    - name: lib-modules
-      hostPath: /lib/modules
-      mountPath: /lib/modules
-      readOnly: true
-  capabilities:
-    add:
-      - NET_ADMIN
-      - SYS_MODULE
-
-# --- Services ---
 service:
-  # WireGuard UDP service (clients connect here)
+  # Ports exposed by the container (used in deployment.yaml)
+  vpnPort: 51820 # UDP (WireGuard)
+  webPort: 51821 # TCP (wg-easy UI)
+
+  # WireGuard UDP Service (LoadBalancer)
   wireguard:
     enabled: true
-    type: LoadBalancer            # k3s/klipper-lb supports UDP
+    type: LoadBalancer
     externalTrafficPolicy: Local
-    ports:
-      - name: wireguard
-        protocol: UDP
-        port: 51820
-        targetPort: 51820
+    port: 51820 # service port
+    targetPort: 51820 # pod target port
+    annotations: {} # e.g. external-dns.alpha.kubernetes.io/hostname: vpn.naphtha.dev
+  commonAnnotations: {}
 
-  # Web UI service (container listens on 51821)
+  # Web UI Service (fronted by Ingress)
   ui:
     enabled: true
     type: ClusterIP
-    ports:
-      - name: http
-        protocol: TCP
-        port: 51821
-        targetPort: 51821
+    port: 51821 # service port
+    targetPort: 51821 # pod target port
+    # nodePort: 8080       # only if type: NodePort
+    annotations: {}
+    externalTrafficPolicy: ClusterIP # harmless for ClusterIP
 
-    # OPTIONAL: expose UI on node IP :8080 (HTTP) instead of Ingress+TLS
-    # type: NodePort
-    # nodePort: 8080
-
-# --- Ingress via Traefik + cert-manager (HTTPS on 443) ---
 ingress:
   enabled: true
   className: "traefik"
-  hostname: "wg-ui.naphtha.dev"   # UI lives on this subdomain
+  hostname: "ui.vpn.naphtha.dev"
   annotations:
     kubernetes.io/ingress.class: "traefik"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
@@ -107,14 +43,40 @@ ingress:
   tls:
     - secretName: wg-easy-tls
       hosts:
-        - "wg-ui.naphtha.dev"
-  rules:
-    - host: "wg-ui.naphtha.dev"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: ui
-                port: 51821
+        - "ui.vpn.naphtha.dev"
+  # extraHosts:
+  #   - host: "alt-ui.vpn.naphtha.dev"
+  #     path: "/"
+
+persistence:
+  enabled: true
+  size: 1Gi
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: "" # set to "local-path" on k3s if you want
+
+# wg-easy unattended setup (deployment.yaml envs)
+init:
+  enabled: true
+  username: "admin"
+  password: "CHANGE_ME_superstrong"
+
+# WireGuard server & peer defaults (deployment.yaml envs)
+wireguardConfig:
+  host: "vpn.naphtha.dev"
+  defaultDns: "1.1.1.1,8.8.8.8"
+  subnet: "10.8.0.0/24"
+  ipv6Subnet: ""
+  # allowedIPs: "0.0.0.0/0, ::/0"
+
+# Kernel/sysctl (deployment.yaml initContainer)
+sysctls:
+  - name: net.ipv4.conf.all.src_valid_mark
+    value: "1"
+  - name: net.ipv4.ip_forward
+    value: "1"
+
+securityContext: {}
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
