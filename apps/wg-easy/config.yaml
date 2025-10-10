@@ -1,0 +1,13 @@
+app:
+  project: system
+  environment: prod
+  name: wireguard
+  os: Linux
+  cluster: https://kubernetes.default.svc
+  namespace: wireguard
+
+chart:
+  repoURL: git@github.com:AndreaTrendafilov/naphtha-charts.git
+  path: charts/wireguard
+  version: main
+  valueFiles: ../../../apps/wg-easy/values.yaml
