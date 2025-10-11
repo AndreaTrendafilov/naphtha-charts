@@ -1,0 +1,118 @@
+# RocketChat Helm Chart Values
+# Based on official chart: https://github.com/RocketChat/helm-charts
+
+# RocketChat image configuration
+image:
+  repository: rocketchat/rocket.chat
+  tag: "6.10.5"
+  pullPolicy: IfNotPresent
+
+# Number of RocketChat replicas
+replicaCount: 1
+
+# MongoDB configuration (required for RocketChat)
+mongodb:
+  enabled: true
+  auth:
+    # CHANGE THESE IN PRODUCTION
+    rootPassword: "changeme-root-password"
+    username: rocketchat
+    password: "changeme-rocketchat-password"
+    database: rocketchat
+  persistence:
+    enabled: true
+    size: 8Gi
+    storageClass: ""
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+
+# RocketChat environment variables
+env:
+  - name: ROOT_URL
+    value: "https://chat.naphtha.dev"
+  - name: MONGO_URL
+    value: "mongodb://rocketchat:changeme-rocketchat-password@rocketchat-mongodb:27017/rocketchat?authSource=rocketchat"
+  - name: MONGO_OPLOG_URL
+    value: "mongodb://root:changeme-root-password@rocketchat-mongodb:27017/local?authSource=admin"
+  - name: DEPLOY_METHOD
+    value: "helm"
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 3000
+  targetPort: 3000
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: "traefik"
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+  hosts:
+    - host: chat.naphtha.dev
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: rocketchat-tls
+      hosts:
+        - chat.naphtha.dev
+
+# Persistence for uploads/avatars
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 8Gi
+  storageClass: ""
+
+# Resource limits for RocketChat pods
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "250m"
+  limits:
+    memory: "2Gi"
+    cpu: "1000m"
+
+# Security context
+securityContext:
+  runAsUser: 999
+  fsGroup: 999
+
+# Pod annotations
+podAnnotations: {}
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}
+
+# Liveness and readiness probes
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 60
+  periodSeconds: 15
+  timeoutSeconds: 5
+  failureThreshold: 3
+  successThreshold: 1
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 15
+  timeoutSeconds: 5
+  failureThreshold: 3
+  successThreshold: 1

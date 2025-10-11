@@ -1,0 +1,12 @@
+app:
+  project: apps
+  environment: prod
+  name: rocketchat
+  os: Linux
+  cluster: https://kubernetes.default.svc
+  namespace: rocketchat
+chart:
+  repoURL: https://rocketchat.github.io/helm-charts
+  path: ""
+  version: 6.2.0
+  valueFiles: ../../apps/rocketchat/values.yaml
