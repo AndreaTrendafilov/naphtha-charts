@@ -11,6 +11,8 @@ spec:
         files:
           - path: deployments/apps/**/config.yaml
           - path: deployments/apps/**/values.yaml
+          - path: apps/**/config.yaml
+          - path: apps/**/values.yaml
   template:
     metadata:
       name: "{{app.name}}-{{app.environment}}"

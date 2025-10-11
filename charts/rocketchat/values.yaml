@@ -1,0 +1,78 @@
+rocketchat:
+  replicaCount: 1
+
+  image:
+    repository: rocketchat/rocket.chat
+    tag: "6.8.7"
+    pullPolicy: IfNotPresent
+
+  ingress:
+    enabled: true
+    className: "traefik"
+    annotations:
+      kubernetes.io/ingress.class: "traefik"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+      traefik.ingress.kubernetes.io/router.tls: "true"
+    hosts:
+      - host: "chat.naphtha.dev"
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: rocketchat-tls
+        hosts:
+          - "chat.naphtha.dev"
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  resources: {}
+
+  # Persistence for uploads and data
+  persistence:
+    enabled: true
+    existingClaim: ""
+    storageClass: ""
+    accessModes: ["ReadWriteOnce"]
+    size: 10Gi
+
+  # MongoDB subchart (Bitnami) values used by upstream chart dependency
+  mongodb:
+    enabled: true
+    architecture: replicaset
+    replicaCount: 3
+    auth:
+      enabled: true
+      rootUser: root
+      rootPassword: "CHANGE_ME_root"
+      usernames:
+        - rocketchat
+      passwords:
+        - "CHANGE_ME_password"
+      databases:
+        - rocketchat
+    persistence:
+      enabled: true
+      size: 20Gi
+    arbiter:
+      enabled: false
+
+  # host URL and site URL config
+  host:
+    name: "chat.naphtha.dev"
+
+  extraEnv:
+    - name: ROOT_URL
+      value: "https://chat.naphtha.dev"
+    - name: MONGO_URL
+      valueFrom:
+        secretKeyRef:
+          name: rocketchat-mongodb
+          key: mongodb-url
+    - name: MONGO_OPLOG_URL
+      valueFrom:
+        secretKeyRef:
+          name: rocketchat-mongodb
+          key: mongodb-oplog-url
