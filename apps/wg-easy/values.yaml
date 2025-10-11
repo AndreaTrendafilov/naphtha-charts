@@ -52,7 +52,7 @@ persistence:
   enabled: true
   size: 1Gi
   accessModes: ["ReadWriteOnce"]
-  storageClassName: "" # set to "local-path" on k3s if you want
+  storageClassName: "local-path"
 
 # wg-easy unattended setup (deployment.yaml envs)
 init:
