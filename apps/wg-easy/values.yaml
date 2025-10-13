@@ -16,7 +16,7 @@ service:
     enabled: true
     type: LoadBalancer
     externalTrafficPolicy: Local
-    port: 51820 # service port
+    port: 51825 # service port
     targetPort: 51820 # pod target port
     annotations: {} # e.g. external-dns.alpha.kubernetes.io/hostname: vpn.naphtha.dev
   commonAnnotations: {}
@@ -25,7 +25,7 @@ service:
   ui:
     enabled: true
     type: ClusterIP
-    port: 51821 # service port
+    port: 51840 # service port
     targetPort: 51821 # pod target port
     # nodePort: 8080       # only if type: NodePort
     annotations: {}
@@ -64,7 +64,7 @@ init:
 wireguardConfig:
   host: "vpn.naphtha.dev"
   defaultDns: "1.1.1.1,8.8.8.8"
-  subnet: "10.8.0.0/24"
+  subnet: "10.10.0.0/24"
   ipv6Subnet: ""
   # allowedIPs: "0.0.0.0/0, ::/0"
 
