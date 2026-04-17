@@ -2,11 +2,11 @@
 extends: default
 
 ignore: |
-  charts/*/templates/
-  charts/*/charts/
+  charts/migrations-operator/templates/
+  charts/jellyfin/templates/
   charts/migrations-operator/crds/
+  charts/rocketchat/charts/
   helm-index/
-  index.yaml
   **/node_modules/
 
 rules:

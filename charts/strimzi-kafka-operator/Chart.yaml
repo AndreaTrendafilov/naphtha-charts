@@ -1,6 +1,6 @@
 apiVersion: v2
 name: strimzi-kafka-operator
-description: Umbrella over upstream Strimzi operator (OCI, naphtha defaults)
+description: Umbrella over upstream `strimzi-kafka-operator` (naphtha defaults)
 type: application
 version: 1.0.0
 appVersion: "0.51.0"

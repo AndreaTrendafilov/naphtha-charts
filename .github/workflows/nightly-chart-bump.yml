@@ -42,7 +42,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add charts/ helm-index/ index.yaml
+          git add charts/ helm-index/
           git status
           git commit -m "chore: nightly bump container images [automated]"
           git push

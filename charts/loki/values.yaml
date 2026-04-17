@@ -1,6 +1,2 @@
 # Values passed to the upstream `loki` subchart (Chart.yaml dependency).
-# SingleBinary + test schema suits small clusters; override for production HA / object storage.
-loki:
-  deploymentMode: SingleBinary
-  loki:
-    useTestSchema: true
+loki: {}
