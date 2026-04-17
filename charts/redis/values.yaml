@@ -1,10 +1,10 @@
 replicaCount: 1
 
 ## Official image from Docker Hub — https://hub.docker.com/_/redis
-## Example tags: 7.4.8-alpine, 8-alpine, 8.6.2-bookworm
+## Example tags: 8.4.2-alpine3.22, 8-alpine, 8.6.2-bookworm
 image:
   repository: redis
-  tag: "7.4.8-alpine"
+  tag: "8.4.2-alpine3.22"
   pullPolicy: IfNotPresent
 
 nameOverride: ""

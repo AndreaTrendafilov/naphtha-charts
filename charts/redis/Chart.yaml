@@ -2,8 +2,8 @@ apiVersion: v2
 name: redis
 description: Redis using the official Docker Hub image (not Bitnami)
 type: application
-version: 1.0.0
-appVersion: "7.4.8"
+version: 1.0.1
+appVersion: "8.4.2"
 home: https://redis.io/
 sources:
   - https://hub.docker.com/_/redis

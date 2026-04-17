@@ -39,7 +39,7 @@ helm package charts/migrations-operator -d helm-index
 helm package charts/jellyfin -d helm-index
 helm package charts/rocketchat -d helm-index
 helm package charts/redis -d helm-index
-helm repo index helm-index --url https://charts.naphtha.dev
+helm repo index helm-index --url https://charts.naphtha.dev/helm-index
 cp helm-index/index.yaml ./index.yaml
 ```
 
@@ -94,6 +94,6 @@ Edit `[vars]` in `workers/helm-charts-proxy/wrangler.toml` and redeploy.
 - **Jellyfin:** `jellyfin.naphtha.dev` (change `charts/jellyfin/values.yaml`).
 - **Rocket.Chat:** `chat.naphtha.dev`, upstream app ~8.2 / chart 6.32.1.
 - **Migrations operator:** `ghcr.io/andreatrendafilov/migrations-operator:v1.2.5`.
-- **Redis:** default image `redis:7.4.8-alpine` ([Docker Hub](https://hub.docker.com/_/redis)); override `image.repository` / `image.tag` as needed.
+- **Redis:** default image `redis:8.4.2-alpine3.22` ([Docker Hub](https://hub.docker.com/_/redis)); override `image.repository` / `image.tag` as needed.
 
 Set MongoDB and other secrets via your own values overlays before production.
