@@ -1,0 +1,17 @@
+---
+extends: default
+
+ignore: |
+  charts/migrations-operator/templates/
+  charts/jellyfin/templates/
+  charts/migrations-operator/crds/
+  charts/rocketchat/charts/
+  helm-index/
+
+rules:
+  document-start: disable
+  line-length:
+    max: 120
+  truthy:
+    allowed-values: ["true", "false", "on"]
+    check-keys: false
