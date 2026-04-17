@@ -43,4 +43,5 @@ jobs:
           helm lint charts/migrations-operator
           helm lint charts/jellyfin
           helm lint charts/redis
+          helm lint charts/kafka
           helm lint charts/rocketchat

@@ -1,0 +1,10 @@
+apiVersion: v2
+name: kafka
+description: Apache Kafka (KRaft) using the official apache/kafka image (not Bitnami)
+type: application
+version: 1.0.0
+appVersion: "4.2.0"
+home: https://kafka.apache.org/
+sources:
+  - https://hub.docker.com/r/apache/kafka
+  - https://github.com/apache/kafka

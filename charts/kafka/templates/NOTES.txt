@@ -1,0 +1,11 @@
+1. Bootstrap (in-cluster clients in namespace "{{ .Release.Namespace }}"):
+
+   {{ include "kafka.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}
+
+2. From your laptop (requires port-forward):
+
+   kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "kafka.fullname" . }} 9092:{{ .Values.service.port }}
+
+   Then use bootstrap server: localhost:9092
+
+3. Single-node KRaft only — not a multi-broker HA setup. For production clusters consider Strimzi or Confluent.

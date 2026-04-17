@@ -8,6 +8,7 @@ Helm chart sources for [naphtha.dev](https://naphtha.dev/). All charts live unde
 | **rocketchat** | Umbrella over [Rocket.Chat official chart](https://rocketchat.github.io/helm-charts) (dependency vendored in `charts/rocketchat/charts/`) |
 | **jellyfin** | Jellyfin media server (Deployment + PVC + Ingress) |
 | **redis** | [Official `redis` image](https://hub.docker.com/_/redis) (Deployment + PVC + Service; not Bitnami) |
+| **kafka** | [Official `apache/kafka`](https://hub.docker.com/r/apache/kafka) JVM image, single-node KRaft (StatefulSet; not Bitnami) |
 
 ## Use the Helm repository
 
@@ -39,6 +40,7 @@ helm package charts/migrations-operator -d helm-index
 helm package charts/jellyfin -d helm-index
 helm package charts/rocketchat -d helm-index
 helm package charts/redis -d helm-index
+helm package charts/kafka -d helm-index
 helm repo index helm-index --url https://charts.naphtha.dev/helm-index
 cp helm-index/index.yaml ./index.yaml
 ```
@@ -95,5 +97,6 @@ Edit `[vars]` in `workers/helm-charts-proxy/wrangler.toml` and redeploy.
 - **Rocket.Chat:** `chat.naphtha.dev`, upstream app ~8.2 / chart 6.32.1.
 - **Migrations operator:** `ghcr.io/andreatrendafilov/migrations-operator:v1.2.5`.
 - **Redis:** default image `redis:8.4.2-alpine3.22` ([Docker Hub](https://hub.docker.com/_/redis)); override `image.repository` / `image.tag` as needed.
+- **Kafka:** default image `apache/kafka:4.2.0` ([Docker Hub](https://hub.docker.com/r/apache/kafka)); single combined KRaft node only. For multi-broker production clusters, use [Strimzi](https://strimzi.io/) or a vendor chart instead of this minimal chart.
 
 Set MongoDB and other secrets via your own values overlays before production.
