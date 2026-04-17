@@ -1,0 +1,48 @@
+---
+name: Nightly chart image bump
+
+on:
+  schedule:
+    # 02:15 UTC daily (after most image builds)
+    - cron: "15 2 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: nightly-chart-bump
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.16.3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check for newer images and repackage
+        id: bump
+        run: python3 scripts/bump-chart-images.py
+
+      - name: Commit and push
+        if: steps.bump.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add charts/ helm-index/
+          git status
+          git commit -m "chore: nightly bump container images [automated]"
+          git push
