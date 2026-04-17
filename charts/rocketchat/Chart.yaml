@@ -2,8 +2,8 @@ apiVersion: v2
 name: rocketchat
 description: Rocket.Chat via official upstream chart (naphtha defaults)
 type: application
-version: 1.0.0
-appVersion: "8.2.0"
+version: 1.0.1
+appVersion: "8.3.2"
 
 dependencies:
   - name: rocketchat

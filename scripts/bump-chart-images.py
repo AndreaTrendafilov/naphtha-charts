@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import urllib.request
@@ -59,14 +60,17 @@ def bump_patch_chart_version(chart_yaml: str) -> str:
     )
 
 
-def latest_migrations_tag() -> str:
-    data = http_json(
-        "https://api.github.com/repos/AndreaTrendafilov/migrations-operator/releases/latest"
-    )
-    tag = data.get("tag_name", "").strip()
+def latest_github_release_tag(repo: str) -> str:
+    """repo: 'owner/name' — tag_name from /releases/latest (no leading v)."""
+    data = http_json(f"https://api.github.com/repos/{repo}/releases/latest")
+    tag = (data.get("tag_name") or "").strip().lstrip("v")
     if not tag:
-        raise RuntimeError("GitHub API: missing tag_name")
+        raise RuntimeError(f"GitHub API: missing tag_name for {repo}")
     return tag
+
+
+def latest_migrations_tag() -> str:
+    return latest_github_release_tag("AndreaTrendafilov/migrations-operator")
 
 
 def current_values_tag(values_path: str) -> str:
@@ -78,6 +82,16 @@ def current_values_tag(values_path: str) -> str:
     if m:
         return m.group(1).strip("\"'")
     raise RuntimeError(f"no image.tag in {values_path}")
+
+
+def tags_equivalent(a: str, b: str) -> bool:
+    """Compare image tags ignoring optional leading v (v1.2.5 vs 1.2.5)."""
+
+    def norm(t: str) -> str:
+        t = t.strip().strip("\"'")
+        return t[1:] if len(t) > 1 and t[0] == "v" and t[1].isdigit() else t
+
+    return norm(a) == norm(b)
 
 
 def latest_jellyfin_semver() -> str:
@@ -110,7 +124,7 @@ def update_migrations() -> bool:
 
     want = latest_migrations_tag()
     have = current_values_tag(values_path)
-    if want == have:
+    if tags_equivalent(want, have):
         print(f"migrations-operator: already at {have}")
         return False
 
@@ -142,7 +156,7 @@ def update_jellyfin() -> bool:
 
     want = latest_jellyfin_semver()
     have = current_values_tag(values_path)
-    if want == have:
+    if tags_equivalent(want, have):
         print(f"jellyfin: already at {have}")
         return False
 
@@ -166,9 +180,47 @@ def update_jellyfin() -> bool:
     return True
 
 
+def update_rocketchat() -> bool:
+    """Bump registry.rocket.chat image tag from RocketChat/Rocket.Chat latest release."""
+    chart_dir = os.path.join(REPO_ROOT, "charts", "rocketchat")
+    values_path = os.path.join(chart_dir, "values.yaml")
+    chart_path = os.path.join(chart_dir, "Chart.yaml")
+
+    want = latest_github_release_tag("RocketChat/Rocket.Chat")
+    have = current_values_tag(values_path)
+    if tags_equivalent(want, have):
+        print(f"rocketchat: already at {have}")
+        return False
+
+    print(f"rocketchat: {have} -> {want}")
+    vyaml = read_file(values_path)
+    vyaml, _ = sub_line(
+        r'^(\s*tag:\s*")[^"]+(")',
+        rf'\g<1>{want}\g<2>',
+        vyaml,
+    )
+    write_file(values_path, vyaml)
+
+    cy = read_file(chart_path)
+    cy, _ = sub_line(
+        r'^appVersion:\s*".*"$',
+        f'appVersion: "{want}"',
+        cy,
+    )
+    cy = bump_patch_chart_version(cy)
+    write_file(chart_path, cy)
+    return True
+
+
 def repackage_helm_index() -> None:
     helm_index = os.path.join(REPO_ROOT, "helm-index")
-    charts = ["migrations-operator", "jellyfin", "rocketchat"]
+    charts = [
+        "migrations-operator",
+        "jellyfin",
+        "rocketchat",
+        "redis",
+        "kafka",
+    ]
     for name in charts:
         src = os.path.join(REPO_ROOT, "charts", name)
         subprocess.run(
@@ -183,10 +235,14 @@ def repackage_helm_index() -> None:
             "index",
             helm_index,
             "--url",
-            "https://charts.naphtha.dev",
+            "https://charts.naphtha.dev/helm-index",
         ],
         check=True,
         cwd=REPO_ROOT,
+    )
+    shutil.copyfile(
+        os.path.join(helm_index, "index.yaml"),
+        os.path.join(REPO_ROOT, "index.yaml"),
     )
 
 
@@ -201,6 +257,10 @@ def main() -> int:
         changed |= update_jellyfin()
     except Exception as e:
         print(f"jellyfin: skip ({e})", file=sys.stderr)
+    try:
+        changed |= update_rocketchat()
+    except Exception as e:
+        print(f"rocketchat: skip ({e})", file=sys.stderr)
 
     if not changed:
         print("No image updates.")

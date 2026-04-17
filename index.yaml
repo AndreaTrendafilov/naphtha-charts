@@ -2,8 +2,21 @@ apiVersion: v1
 entries:
   jellyfin:
   - apiVersion: v2
+    appVersion: 10.11.8
+    created: "2026-04-17T16:41:13.134095345+03:00"
+    description: Jellyfin media server
+    digest: 8a1f09db18c468bedc425566a9bc6501551c8a22ef752cdadc55514396e6f87c
+    home: https://jellyfin.org/
+    name: jellyfin
+    sources:
+    - https://github.com/jellyfin/jellyfin
+    type: application
+    urls:
+    - https://charts.naphtha.dev/helm-index/jellyfin-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
     appVersion: 10.10.7
-    created: "2026-04-17T16:29:36.31117155+03:00"
+    created: "2026-04-17T16:41:13.133891411+03:00"
     description: Jellyfin media server
     digest: 5bef705064df06c421dc4a2385b813938152f43dc53f6373dd57754e52c0a136
     home: https://jellyfin.org/
@@ -17,9 +30,9 @@ entries:
   kafka:
   - apiVersion: v2
     appVersion: 4.2.0
-    created: "2026-04-17T16:29:36.311382381+03:00"
+    created: "2026-04-17T16:41:13.134312607+03:00"
     description: Apache Kafka (KRaft) using the official apache/kafka image (not Bitnami)
-    digest: a378b14dfcbec5eada203d39562e2335a155718bf5e8e991218ed81d1160756f
+    digest: be7bf66bbeeedcc6a6fc57a7f59c1945d266abd3432b1af370f4432b2498b34b
     home: https://kafka.apache.org/
     name: kafka
     sources:
@@ -34,9 +47,9 @@ entries:
       helm.sh/resource-policy: keep
     apiVersion: v2
     appVersion: 1.2.5
-    created: "2026-04-17T16:29:36.31162216+03:00"
+    created: "2026-04-17T16:41:13.134597904+03:00"
     description: Kubernetes operator to manage database migrations
-    digest: 94f43cbfa56519c17dc545885d0cba118d4b30add8d29fddb34d57ec9e893de9
+    digest: 860ae9e4d4f74b3641625adeb5cd07f7f039d01c40a3e65a42c5d0872fc12e42
     home: https://github.com/AndreaTrendafilov/migrations-operator
     kubeVersion: '>= 1.24.0-0'
     maintainers:
@@ -51,9 +64,9 @@ entries:
   redis:
   - apiVersion: v2
     appVersion: 8.4.2
-    created: "2026-04-17T16:29:36.311962535+03:00"
+    created: "2026-04-17T16:41:13.134995213+03:00"
     description: Redis using the official Docker Hub image (not Bitnami)
-    digest: 3f337292c17a19132450cd29b12aa901a4c281217933b21da67cfd62f94ddeb3
+    digest: 64fd77702c7628770f2e0d0a8ed3a9511cd27ee45b3b9aeeaddd786f12673663
     home: https://redis.io/
     name: redis
     sources:
@@ -65,7 +78,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: 7.4.8
-    created: "2026-04-17T16:29:36.311807119+03:00"
+    created: "2026-04-17T16:41:13.134798435+03:00"
     description: Redis using the official Docker Hub image (not Bitnami)
     digest: e338f372bd4093d1f26eaa1c10be06ad5573c774122cf1e3218d660d559eeaf6
     home: https://redis.io/
@@ -79,17 +92,31 @@ entries:
     version: 1.0.0
   rocketchat:
   - apiVersion: v2
-    appVersion: 8.2.0
-    created: "2026-04-17T16:29:36.323705013+03:00"
+    appVersion: 8.3.2
+    created: "2026-04-17T16:41:13.157944368+03:00"
     dependencies:
     - name: rocketchat
       repository: https://rocketchat.github.io/helm-charts
       version: 6.32.1
     description: Rocket.Chat via official upstream chart (naphtha defaults)
-    digest: c8a74bb53a5925ec2ca64a9e85690f1c7e6e338ba594bee91d9571dbedc6d3a6
+    digest: aa982bd2fc30bc032ec42ba9b1ab51cd2698c00539b1157a5eba23ef700794ee
+    name: rocketchat
+    type: application
+    urls:
+    - https://charts.naphtha.dev/helm-index/rocketchat-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 8.2.0
+    created: "2026-04-17T16:41:13.146012951+03:00"
+    dependencies:
+    - name: rocketchat
+      repository: https://rocketchat.github.io/helm-charts
+      version: 6.32.1
+    description: Rocket.Chat via official upstream chart (naphtha defaults)
+    digest: aae3542656a5fce200212d52df0214da2a2131aeb3738483076600ea15791c66
     name: rocketchat
     type: application
     urls:
     - https://charts.naphtha.dev/helm-index/rocketchat-1.0.0.tgz
     version: 1.0.0
-generated: "2026-04-17T16:29:36.310848138+03:00"
+generated: "2026-04-17T16:41:13.133604712+03:00"

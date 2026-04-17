@@ -102,7 +102,7 @@ Edit `[vars]` in `workers/helm-charts-proxy/wrangler.toml` and redeploy.
 ## Defaults
 
 - **Jellyfin:** `jellyfin.naphtha.dev` (change `charts/jellyfin/values.yaml`).
-- **Rocket.Chat:** `chat.naphtha.dev`, upstream app ~8.2 / chart 6.32.1.
+- **Rocket.Chat:** `chat.naphtha.dev`, upstream app ~8.3 / chart 6.32.1 (image tag bumped via nightly job from [GitHub releases](https://github.com/RocketChat/Rocket.Chat/releases)).
 - **Migrations operator:** `ghcr.io/andreatrendafilov/migrations-operator:v1.2.5`.
 - **Redis:** default image `redis:8.4.2-alpine3.22` ([Docker Hub](https://hub.docker.com/_/redis)); override `image.repository` / `image.tag` as needed.
 - **Kafka:** default image `apache/kafka:4.2.0` ([Docker Hub](https://hub.docker.com/r/apache/kafka)); single combined KRaft node only. For multi-broker production clusters, use [Strimzi](https://strimzi.io/) or a vendor chart instead of this minimal chart.
