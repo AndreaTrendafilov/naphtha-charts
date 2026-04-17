@@ -39,7 +39,7 @@ jobs:
       - name: Helm lint (charts)
         run: |
           set -euo pipefail
-          helm dependency build charts/rocketchat
+          # rocketchat subchart is vendored under charts/rocketchat/charts/*.tgz — no helm repo add
           helm lint charts/migrations-operator
           helm lint charts/jellyfin
           helm lint charts/rocketchat
