@@ -39,9 +39,10 @@ jobs:
       - name: Helm lint (charts)
         run: |
           set -euo pipefail
-          # rocketchat subchart is vendored under charts/rocketchat/charts/*.tgz — no helm repo add
-          helm lint charts/migrations-operator
-          helm lint charts/jellyfin
-          helm lint charts/redis
-          helm lint charts/kafka
-          helm lint charts/rocketchat
+          # Vendored deps live under charts/<name>/charts/*.tgz — committed after bootstrap-upstream-charts.py
+          for d in charts/*/; do
+            if [[ -f "${d}Chart.yaml" ]]; then
+              echo "helm lint ${d}"
+              helm lint "${d}"
+            fi
+          done

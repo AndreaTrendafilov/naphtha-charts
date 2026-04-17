@@ -1,0 +1,2 @@
+# Values passed to the upstream `pulsar` subchart (Chart.yaml dependency).
+pulsar: {}

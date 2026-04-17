@@ -1,0 +1,2 @@
+# Values passed to the upstream `cert-manager` subchart (Chart.yaml dependency).
+cert-manager: {}

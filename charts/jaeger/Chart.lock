@@ -1,0 +1,6 @@
+dependencies:
+- name: jaeger
+  repository: https://jaegertracing.github.io/helm-charts
+  version: 4.7.0
+digest: sha256:b8c411566fa99d8979280141cc5c1b87d285b65b04eadfc45b8f6bb4e90d7cef
+generated: "2026-04-17T16:54:02.579107714+03:00"

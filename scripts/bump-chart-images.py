@@ -214,13 +214,12 @@ def update_rocketchat() -> bool:
 
 def repackage_helm_index() -> None:
     helm_index = os.path.join(REPO_ROOT, "helm-index")
-    charts = [
-        "migrations-operator",
-        "jellyfin",
-        "rocketchat",
-        "redis",
-        "kafka",
-    ]
+    charts_dir = os.path.join(REPO_ROOT, "charts")
+    charts = sorted(
+        n
+        for n in os.listdir(charts_dir)
+        if os.path.isfile(os.path.join(charts_dir, n, "Chart.yaml"))
+    )
     for name in charts:
         src = os.path.join(REPO_ROOT, "charts", name)
         subprocess.run(
@@ -279,4 +278,9 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "repackage":
+        os.chdir(REPO_ROOT)
+        print("Repackaging all charts into helm-index/ …")
+        repackage_helm_index()
+        sys.exit(0)
     sys.exit(main())

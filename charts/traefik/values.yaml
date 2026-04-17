@@ -1,0 +1,2 @@
+# Values passed to the upstream `traefik` subchart (Chart.yaml dependency).
+traefik: {}

@@ -1,0 +1,11 @@
+apiVersion: v2
+name: strimzi-kafka-operator
+description: Umbrella over upstream Strimzi operator (OCI, naphtha defaults)
+type: application
+version: 1.0.0
+appVersion: "0.51.0"
+
+dependencies:
+  - name: strimzi-kafka-operator
+    version: "0.51.0"
+    repository: oci://quay.io/strimzi-helm

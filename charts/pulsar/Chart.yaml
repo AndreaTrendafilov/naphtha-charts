@@ -1,0 +1,11 @@
+apiVersion: v2
+name: pulsar
+description: Umbrella over upstream `pulsar` (naphtha defaults)
+type: application
+version: 1.0.0
+appVersion: "4.5.0"
+
+dependencies:
+  - name: pulsar
+    version: "4.5.0"
+    repository: "https://pulsar.apache.org/charts"

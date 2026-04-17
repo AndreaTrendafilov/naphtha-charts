@@ -1,0 +1,11 @@
+apiVersion: v2
+name: jaeger
+description: Umbrella over upstream `jaeger` (naphtha defaults)
+type: application
+version: 1.0.0
+appVersion: "4.7.0"
+
+dependencies:
+  - name: jaeger
+    version: "4.7.0"
+    repository: "https://jaegertracing.github.io/helm-charts"

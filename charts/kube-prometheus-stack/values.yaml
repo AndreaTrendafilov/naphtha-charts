@@ -1,0 +1,2 @@
+# Values passed to the upstream `kube-prometheus-stack` subchart (Chart.yaml dependency).
+kube-prometheus-stack: {}

@@ -1,0 +1,2 @@
+# Values passed to the upstream `operator` subchart (Chart.yaml dependency).
+operator: {}

@@ -1,0 +1,2 @@
+# Values passed to the upstream `cloudnative-pg` subchart (Chart.yaml dependency).
+cloudnative-pg: {}

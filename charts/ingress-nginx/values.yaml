@@ -1,0 +1,2 @@
+# Values passed to the upstream `ingress-nginx` subchart (Chart.yaml dependency).
+ingress-nginx: {}

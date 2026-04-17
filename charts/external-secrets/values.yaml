@@ -1,0 +1,2 @@
+# Values passed to the upstream `external-secrets` subchart (Chart.yaml dependency).
+external-secrets: {}

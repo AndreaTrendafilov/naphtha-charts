@@ -1,0 +1,2 @@
+# Values passed to the upstream `pxc-operator` subchart (Chart.yaml dependency).
+pxc-operator: {}

@@ -1,0 +1,11 @@
+apiVersion: v2
+name: nats
+description: Umbrella over upstream `nats` (naphtha defaults)
+type: application
+version: 1.0.0
+appVersion: "2.12.6"
+
+dependencies:
+  - name: nats
+    version: "2.12.6"
+    repository: "https://nats-io.github.io/k8s/helm/charts/"

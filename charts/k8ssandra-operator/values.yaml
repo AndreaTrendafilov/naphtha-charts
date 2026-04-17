@@ -1,0 +1,2 @@
+# Values passed to the upstream `k8ssandra-operator` subchart (Chart.yaml dependency).
+k8ssandra-operator: {}

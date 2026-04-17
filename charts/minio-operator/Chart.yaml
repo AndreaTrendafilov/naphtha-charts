@@ -1,0 +1,11 @@
+apiVersion: v2
+name: minio-operator
+description: Umbrella over upstream `operator` (naphtha defaults)
+type: application
+version: 1.0.0
+appVersion: "7.1.1"
+
+dependencies:
+  - name: operator
+    version: "7.1.1"
+    repository: "https://operator.min.io"

@@ -1,0 +1,11 @@
+apiVersion: v2
+name: mongodb-community-operator
+description: Umbrella over upstream `community-operator` (naphtha defaults)
+type: application
+version: 1.0.0
+appVersion: "0.13.0"
+
+dependencies:
+  - name: community-operator
+    version: "0.13.0"
+    repository: "https://mongodb.github.io/helm-charts"

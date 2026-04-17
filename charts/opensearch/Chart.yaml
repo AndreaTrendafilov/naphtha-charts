@@ -1,0 +1,11 @@
+apiVersion: v2
+name: opensearch
+description: Umbrella over upstream `opensearch` (naphtha defaults)
+type: application
+version: 1.0.0
+appVersion: "3.6.0"
+
+dependencies:
+  - name: opensearch
+    version: "3.6.0"
+    repository: "https://opensearch-project.github.io/helm-charts/"

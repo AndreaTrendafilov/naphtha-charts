@@ -1,0 +1,2 @@
+# Values passed to the upstream `external-dns` subchart (Chart.yaml dependency).
+external-dns: {}

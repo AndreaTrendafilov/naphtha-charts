@@ -10,13 +10,32 @@ Helm chart sources for [naphtha.dev](https://naphtha.dev/). All charts live unde
 | **redis** | [Official `redis` image](https://hub.docker.com/_/redis) (Deployment + PVC + Service; not Bitnami) |
 | **kafka** | [Official `apache/kafka`](https://hub.docker.com/r/apache/kafka) JVM image, single-node KRaft (StatefulSet; not Bitnami) |
 
-### Curated upstream (databases, messaging, observability, ingress)
+### Umbrella charts (upstream Helm dependency + vendored `charts/*.tgz`)
 
-Not packaged here — install from vendor repos. See **[docs/curated-upstream-helm.md](docs/curated-upstream-helm.md)** (PostgreSQL/CloudNativePG, Strimzi, Prometheus stack, cert-manager, NATS, OpenSearch, MinIO operator, etc.). Quick add:
+Install with `helm install myrel naphtha/<chart>` after `helm repo update`. Override values under the **upstream subchart key** (see each `values.yaml`). Pin versions are in `Chart.yaml`; refresh vendored deps with `helm dependency update charts/<name>` after editing.
 
-```bash
-./scripts/helm-repo-add-upstream.sh
-```
+| Chart | Upstream chart / notes |
+|-------|-------------------------|
+| **cloudnative-pg** | [CloudNativePG operator](https://cloudnative-pg.io/) |
+| **percona-pxc-operator** | [Percona XtraDB cluster operator](https://docs.percona.com/) |
+| **mongodb-community-operator** | [MongoDB community operator](https://github.com/mongodb/mongodb-kubernetes-operator) |
+| **k8ssandra-operator** | [K8ssandra operator](https://k8ssandra.io/) |
+| **opensearch** | [OpenSearch](https://opensearch.org/) |
+| **nats** | [NATS](https://nats.io/) |
+| **pulsar** | [Apache Pulsar](https://pulsar.apache.org/) (heavy footprint) |
+| **kube-prometheus-stack** | [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts) |
+| **loki** | [Grafana Loki](https://grafana.com/oss/loki/) (defaults tuned for small/lab; set storage for prod) |
+| **tempo** | [Grafana Tempo](https://grafana.com/oss/tempo/) |
+| **jaeger** | [Jaeger](https://www.jaegertracing.io/) |
+| **cert-manager** | [cert-manager](https://cert-manager.io/) |
+| **ingress-nginx** | [ingress-nginx](https://kubernetes.github.io/ingress-nginx/) |
+| **traefik** | [Traefik](https://traefik.io/) |
+| **external-dns** | [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) |
+| **external-secrets** | [External Secrets](https://external-secrets.io/) |
+| **minio-operator** | [MinIO operator](https://min.io/) |
+| **strimzi-kafka-operator** | [Strimzi](https://strimzi.io/) (OCI dependency) |
+
+Vendor-only `helm repo add` (for browsing upstream indexes locally) is still in **[docs/curated-upstream-helm.md](docs/curated-upstream-helm.md)** and `./scripts/helm-repo-add-upstream.sh`.
 
 ## Use the Helm repository
 
@@ -41,19 +60,21 @@ helm repo add naphtha 'https://raw.githubusercontent.com/AndreaTrendafilov/napht
 
 ## Work on a chart
 
-Edit sources under `charts/<name>/`, then refresh packages and the repo index:
+Edit sources under `charts/<name>/`. For umbrellas, run `helm dependency update charts/<name>` after changing `Chart.yaml` dependencies.
+
+Repackage **everything** into `helm-index/` and sync the root index:
 
 ```bash
-helm package charts/migrations-operator -d helm-index
-helm package charts/jellyfin -d helm-index
-helm package charts/rocketchat -d helm-index
-helm package charts/redis -d helm-index
-helm package charts/kafka -d helm-index
-helm repo index helm-index --url https://charts.naphtha.dev/helm-index
-cp helm-index/index.yaml ./index.yaml
+python3 scripts/bump-chart-images.py repackage
 ```
 
-Commit `charts/`, `helm-index/`, and the repo root `index.yaml` together.
+To **bootstrap or refresh** all upstream umbrellas from pinned versions in `scripts/bootstrap-upstream-charts.py`:
+
+```bash
+python3 scripts/bootstrap-upstream-charts.py
+```
+
+Commit `charts/` (including `charts/*/charts/*.tgz`), `helm-index/`, and the repo root `index.yaml` together.
 
 ## Cloudflare Worker (`charts.naphtha.dev`)
 

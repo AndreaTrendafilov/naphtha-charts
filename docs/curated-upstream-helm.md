@@ -1,6 +1,6 @@
 # Curated upstream Helm charts
 
-These projects are **maintained outside** this repo. Add the vendor Helm repository (or use the OCI install), then `helm install` from upstream — they are **not** listed in the naphtha `helm-index/` (unlike `charts/redis`, `charts/kafka`, etc.).
+Most of these are also packaged as **umbrella charts** under `charts/` in this repo (see the README table) and appear in the naphtha `helm-index/`. You can still add vendor repos here for `helm search` / debugging, or install **directly** from upstream when you do not want the umbrella layer.
 
 Pin versions in production (`helm search repo --versions <chart>` or [Artifact Hub](https://artifacthub.io/)).
 

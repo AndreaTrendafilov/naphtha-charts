@@ -1,0 +1,2 @@
+# Values passed to the upstream `tempo` subchart (Chart.yaml dependency).
+tempo: {}
