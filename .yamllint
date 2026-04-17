@@ -2,11 +2,12 @@
 extends: default
 
 ignore: |
-  charts/migrations-operator/templates/
-  charts/jellyfin/templates/
+  charts/*/templates/
   charts/migrations-operator/crds/
   charts/rocketchat/charts/
   helm-index/
+  index.yaml
+  **/node_modules/
 
 rules:
   document-start: disable
