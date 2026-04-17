@@ -10,6 +10,14 @@ Helm chart sources for [naphtha.dev](https://naphtha.dev/). All charts live unde
 | **redis** | [Official `redis` image](https://hub.docker.com/_/redis) (Deployment + PVC + Service; not Bitnami) |
 | **kafka** | [Official `apache/kafka`](https://hub.docker.com/r/apache/kafka) JVM image, single-node KRaft (StatefulSet; not Bitnami) |
 
+### Curated upstream (databases, messaging, observability, ingress)
+
+Not packaged here — install from vendor repos. See **[docs/curated-upstream-helm.md](docs/curated-upstream-helm.md)** (PostgreSQL/CloudNativePG, Strimzi, Prometheus stack, cert-manager, NATS, OpenSearch, MinIO operator, etc.). Quick add:
+
+```bash
+./scripts/helm-repo-add-upstream.sh
+```
+
 ## Use the Helm repository
 
 **Canonical URL (Worker + dedicated hostname):**
