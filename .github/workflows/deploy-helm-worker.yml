@@ -23,6 +23,10 @@ jobs:
       - name: Check out code from GitHub
         uses: actions/checkout@v4
 
+      - name: Install worker dependencies
+        run: npm ci
+        working-directory: workers/helm-charts-proxy
+
       - name: Deploy Worker
         uses: cloudflare/wrangler-action@v3
         with:
