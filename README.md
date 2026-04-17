@@ -19,7 +19,7 @@ helm search repo naphtha
 ```
 
 - Index: `https://charts.naphtha.dev/index.yaml`
-- Charts: `https://charts.naphtha.dev/<chart>-<version>.tgz`
+- Charts: `https://charts.naphtha.dev/helm-index/<chart>-<version>.tgz` (also `/helm-index/...` as in `index.yaml`)
 
 **Why not `https://naphtha.dev/charts`?** If the apex `naphtha.dev` is **Cloudflare Pages** (or a SPA), it usually owns **all paths**, so `/charts/index.yaml` returns your HTML shell — not YAML. A **subdomain** (`charts.naphtha.dev`) is attached only to this Worker, so Helm gets real files.
 
@@ -44,11 +44,33 @@ Commit `charts/` and `helm-index/` together.
 
 ## Cloudflare Worker (`charts.naphtha.dev`)
 
-The Worker (`workers/helm-charts-proxy/`) proxies to:
+The Worker (`workers/helm-charts-proxy/`) serves **`index.yaml`** from the repo root and **`helm-index/*`** for packaged charts.
 
-`https://raw.githubusercontent.com/AndreaTrendafilov/naphtha-charts/main/helm-index/<file>`
+- **Public repo:** it fetches via `raw.githubusercontent.com` (no token).
+- **Private repo:** set a **secret** `GITHUB_TOKEN` on the Worker (see below); it uses the GitHub Contents API with `Accept: application/vnd.github.raw`.
 
-After you push `helm-index/` to `main`, clients see new charts (short cache on `index.yaml`).
+After you push `index.yaml` / `helm-index/` to `main`, clients see new charts (short cache on `index.yaml`).
+
+### GitHub token (private repo only)
+
+1. **Create a token**
+   - **Fine-grained PAT** (recommended): GitHub → **Settings** → **Developer settings** → **Fine-grained tokens** → **Generate new**.
+     - Resource owner: your user (or org).
+     - Repository access: **Only select repositories** → `naphtha-charts`.
+     - Permissions → **Repository** → **Contents: Read** (Metadata is included).
+   - **Classic PAT:** scope **`repo`** (read-only is enough for public index read on private repo).
+
+2. **Add it to Cloudflare (encrypted)**
+   - Workers & Pages → **naphtha-helm-charts-proxy** → **Settings** → **Variables and Secrets** → **Add** → type **Secret** → name **`GITHUB_TOKEN`** → paste the token → **Save**.
+   - Or CLI from `workers/helm-charts-proxy/`:  
+     `npx wrangler secret put GITHUB_TOKEN`  
+     (paste token when prompted.)
+
+3. **Redeploy** the Worker so the binding is active (`npx wrangler deploy` or your GitHub Action).
+
+4. Set the **GitHub repo to Private**; `helm repo add https://charts.naphtha.dev` still works because only the Worker talks to GitHub with the token.
+
+Do **not** commit the token. Rotate it if it leaks.
 
 ### One-time setup
 
