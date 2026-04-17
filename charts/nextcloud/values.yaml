@@ -1,0 +1,2 @@
+# Values passed to the upstream `nextcloud` subchart (Chart.yaml dependency).
+nextcloud: {}

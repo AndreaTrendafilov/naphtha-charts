@@ -1,0 +1,6 @@
+dependencies:
+- name: kubevirt
+  repository: https://encircle360-oss.github.io/helm-charts/
+  version: 0.2.0
+digest: sha256:95a397c792bd10ed9490675fbbefd6c3cbc37cc63ba5270a2c2c690bc1f300cc
+generated: "2026-04-17T20:51:55.978175682+03:00"

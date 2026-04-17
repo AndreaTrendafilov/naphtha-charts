@@ -1,0 +1,11 @@
+apiVersion: v2
+name: home-assistant
+description: Umbrella over pajikos Home Assistant Helm chart (naphtha defaults; common TrueNAS-style app)
+type: application
+version: 1.0.0
+appVersion: "2026.4.2"
+
+dependencies:
+  - name: home-assistant
+    version: "0.3.54"
+    repository: "http://pajikos.github.io/home-assistant-helm-chart"

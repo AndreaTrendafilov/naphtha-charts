@@ -1,0 +1,6 @@
+dependencies:
+- name: plex
+  repository: https://charts.alekc.dev
+  version: 2.9.1
+digest: sha256:496c3fbaaf29341ff2817551757a3ebdcb360cee2ab879a6790e1eb3156b1a4a
+generated: "2026-04-17T20:51:39.796921565+03:00"

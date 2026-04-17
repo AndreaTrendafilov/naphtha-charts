@@ -1,0 +1,11 @@
+apiVersion: v2
+name: kubevirt
+description: Umbrella over encircle360 KubeVirt Helm chart (community; installs KubeVirt operator)
+type: application
+version: 1.0.0
+appVersion: "v1.7.0"
+
+dependencies:
+  - name: kubevirt
+    version: "0.2.0"
+    repository: "https://encircle360-oss.github.io/helm-charts/"

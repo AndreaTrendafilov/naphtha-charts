@@ -1,0 +1,2 @@
+# Values passed to the upstream `plex` subchart (Chart.yaml dependency).
+plex: {}

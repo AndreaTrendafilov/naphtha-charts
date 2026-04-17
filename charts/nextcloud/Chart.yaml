@@ -1,0 +1,11 @@
+apiVersion: v2
+name: nextcloud
+description: Umbrella over upstream Nextcloud Helm chart (naphtha defaults; common TrueNAS-style app)
+type: application
+version: 1.0.0
+appVersion: "33.0.2"
+
+dependencies:
+  - name: nextcloud
+    version: "9.0.5"
+    repository: "https://nextcloud.github.io/helm"
