@@ -1,0 +1,17 @@
+{{- if .Values.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "migrations-operator.fullname" . }}-metrics-service
+  namespace: migrations-system
+  labels:
+    {{- include "migrations-operator.labels" . | nindent 4 }}
+spec:
+  ports:
+  - port: {{ .Values.metrics.port }}
+    targetPort: metrics
+    protocol: TCP
+    name: metrics
+  selector:
+    {{- include "migrations-operator.selectorLabels" . | nindent 4 }}
+{{- end }}

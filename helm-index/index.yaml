@@ -1,0 +1,22 @@
+apiVersion: v1
+entries:
+  migrations-operator:
+  - annotations:
+      helm.sh/resource-policy: keep
+    apiVersion: v2
+    appVersion: 1.2.5
+    created: "2026-04-17T14:46:43.452358956+03:00"
+    description: Kubernetes operator to manage database migrations
+    digest: ce5514a48498bad5e84312ee721e2b167dcd60a1631ba415f854bcb28584b031
+    home: https://github.com/AndreaTrendafilov/migrations-operator
+    kubeVersion: '>= 1.24.0-0'
+    maintainers:
+    - name: Andrea Trendafilov
+    name: migrations-operator
+    sources:
+    - https://github.com/AndreaTrendafilov/migrations-operator
+    type: application
+    urls:
+    - https://naphtha.dev/charts/migrations-operator-1.0.1.tgz
+    version: 1.0.1
+generated: "2026-04-17T14:46:43.451635895+03:00"

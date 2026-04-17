@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: migrations-system
+  labels:
+    {{- include "migrations-operator.labels" . | nindent 4 }}
+  annotations:
+    # Ensure namespace is created before certificate generation
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-20"
+    "helm.sh/resource-policy": keep

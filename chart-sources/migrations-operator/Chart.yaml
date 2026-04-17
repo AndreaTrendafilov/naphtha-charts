@@ -1,0 +1,15 @@
+apiVersion: v2
+name: migrations-operator
+description: Kubernetes operator to manage database migrations
+type: application
+version: 1.0.1
+appVersion: "1.2.5"
+kubeVersion: '>= 1.24.0-0'
+home: https://github.com/AndreaTrendafilov/migrations-operator
+sources:
+  - https://github.com/AndreaTrendafilov/migrations-operator
+maintainers:
+  - name: Andrea Trendafilov
+annotations:
+  # CRDs from crds/; Helm installs them before other resources
+  helm.sh/resource-policy: keep

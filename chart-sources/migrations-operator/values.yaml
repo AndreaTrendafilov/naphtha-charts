@@ -1,0 +1,53 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/andreatrendafilov/migrations-operator
+  tag: "v1.2.5"
+  pullPolicy: IfNotPresent
+
+# Image pull secrets for private registries
+imagePullSecrets: []
+# - name: acr-creds
+
+nameOverride: ""
+fullnameOverride: "migrations-operator"
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: "migrations-operator"
+
+podAnnotations: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  fsGroup: 65532
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 65532
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Metrics configuration
+metrics:
+  enabled: true
+  port: 8080
