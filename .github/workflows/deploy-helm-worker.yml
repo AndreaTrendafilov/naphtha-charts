@@ -1,0 +1,32 @@
+---
+name: Deploy Helm charts worker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "workers/helm-charts-proxy/**"
+      - ".github/workflows/deploy-helm-worker.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: wrangler deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: workers/helm-charts-proxy
+
+    steps:
+      - name: Check out code from GitHub
+        uses: actions/checkout@v4
+
+      - name: Deploy Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: workers/helm-charts-proxy
+          command: deploy

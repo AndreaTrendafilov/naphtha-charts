@@ -1,0 +1,14 @@
+# Deploy: CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID (GitHub Actions secrets)
+# After first deploy, attach a route in the dashboard:
+#   naphtha.dev/charts*
+# so this worker handles only /charts (your site root can stay on Pages or another worker).
+
+name = "naphtha-helm-charts-proxy"
+main = "src/index.ts"
+compatibility_date = "2024-10-01"
+
+# Public repo — no GitHub token required at runtime.
+[vars]
+GITHUB_OWNER = "AndreaTrendafilov"
+GITHUB_REPO = "naphtha-charts"
+GITHUB_BRANCH = "main"
