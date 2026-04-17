@@ -1,0 +1,52 @@
+replicaCount: 1
+
+## Official image from Docker Hub — https://hub.docker.com/_/redis
+## Example tags: 7.4.8-alpine, 8-alpine, 8.6.2-bookworm
+image:
+  repository: redis
+  tag: "7.4.8-alpine"
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 6379
+
+## AOF persistence to /data (official image default data dir)
+persistence:
+  enabled: true
+  storageClass: ""
+  accessModes:
+    - ReadWriteOnce
+  size: 8Gi
+  mountPath: /data
+
+## Optional password (creates a Secret). Prefer existingSecret in production.
+auth:
+  enabled: false
+  password: ""
+  existingSecret: ""
+  existingSecretPasswordKey: "redis-password"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: "1"
+    memory: 512Mi
+
+## Official image runs as user `redis` (Alpine ~ uid 999)
+podSecurityContext:
+  fsGroup: 999
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 999
+  readOnlyRootFilesystem: false
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

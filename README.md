@@ -7,6 +7,7 @@ Helm chart sources for [naphtha.dev](https://naphtha.dev/). All charts live unde
 | **migrations-operator** | Database migrations operator |
 | **rocketchat** | Umbrella over [Rocket.Chat official chart](https://rocketchat.github.io/helm-charts) (dependency vendored in `charts/rocketchat/charts/`) |
 | **jellyfin** | Jellyfin media server (Deployment + PVC + Ingress) |
+| **redis** | [Official `redis` image](https://hub.docker.com/_/redis) (Deployment + PVC + Service; not Bitnami) |
 
 ## Use the Helm repository
 
@@ -37,10 +38,12 @@ Edit sources under `charts/<name>/`, then refresh packages and the repo index:
 helm package charts/migrations-operator -d helm-index
 helm package charts/jellyfin -d helm-index
 helm package charts/rocketchat -d helm-index
+helm package charts/redis -d helm-index
 helm repo index helm-index --url https://charts.naphtha.dev
+cp helm-index/index.yaml ./index.yaml
 ```
 
-Commit `charts/` and `helm-index/` together.
+Commit `charts/`, `helm-index/`, and the repo root `index.yaml` together.
 
 ## Cloudflare Worker (`charts.naphtha.dev`)
 
@@ -91,5 +94,6 @@ Edit `[vars]` in `workers/helm-charts-proxy/wrangler.toml` and redeploy.
 - **Jellyfin:** `jellyfin.naphtha.dev` (change `charts/jellyfin/values.yaml`).
 - **Rocket.Chat:** `chat.naphtha.dev`, upstream app ~8.2 / chart 6.32.1.
 - **Migrations operator:** `ghcr.io/andreatrendafilov/migrations-operator:v1.2.5`.
+- **Redis:** default image `redis:7.4.8-alpine` ([Docker Hub](https://hub.docker.com/_/redis)); override `image.repository` / `image.tag` as needed.
 
 Set MongoDB and other secrets via your own values overlays before production.

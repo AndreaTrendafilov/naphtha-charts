@@ -3,7 +3,7 @@ entries:
   jellyfin:
   - apiVersion: v2
     appVersion: 10.10.7
-    created: "2026-04-17T15:21:43.061249538+03:00"
+    created: "2026-04-17T16:18:26.361935188+03:00"
     description: Jellyfin media server
     digest: 5bef705064df06c421dc4a2385b813938152f43dc53f6373dd57754e52c0a136
     home: https://jellyfin.org/
@@ -12,14 +12,14 @@ entries:
     - https://github.com/jellyfin/jellyfin
     type: application
     urls:
-    - https://charts.naphtha.dev/helm-index/jellyfin-1.0.0.tgz
+    - https://charts.naphtha.dev/jellyfin-1.0.0.tgz
     version: 1.0.0
   migrations-operator:
   - annotations:
       helm.sh/resource-policy: keep
     apiVersion: v2
     appVersion: 1.2.5
-    created: "2026-04-17T15:21:43.06185968+03:00"
+    created: "2026-04-17T16:18:26.362208136+03:00"
     description: Kubernetes operator to manage database migrations
     digest: 94f43cbfa56519c17dc545885d0cba118d4b30add8d29fddb34d57ec9e893de9
     home: https://github.com/AndreaTrendafilov/migrations-operator
@@ -31,12 +31,27 @@ entries:
     - https://github.com/AndreaTrendafilov/migrations-operator
     type: application
     urls:
-    - https://charts.naphtha.dev/helm-index/migrations-operator-1.0.1.tgz
+    - https://charts.naphtha.dev/migrations-operator-1.0.1.tgz
     version: 1.0.1
+  redis:
+  - apiVersion: v2
+    appVersion: 7.4.8
+    created: "2026-04-17T16:18:26.362601231+03:00"
+    description: Redis using the official Docker Hub image (not Bitnami)
+    digest: e338f372bd4093d1f26eaa1c10be06ad5573c774122cf1e3218d660d559eeaf6
+    home: https://redis.io/
+    name: redis
+    sources:
+    - https://hub.docker.com/_/redis
+    - https://github.com/redis/redis
+    type: application
+    urls:
+    - https://charts.naphtha.dev/redis-1.0.0.tgz
+    version: 1.0.0
   rocketchat:
   - apiVersion: v2
     appVersion: 8.2.0
-    created: "2026-04-17T15:21:43.079818781+03:00"
+    created: "2026-04-17T16:18:26.374433185+03:00"
     dependencies:
     - name: rocketchat
       repository: https://rocketchat.github.io/helm-charts
@@ -46,6 +61,6 @@ entries:
     name: rocketchat
     type: application
     urls:
-    - https://charts.naphtha.dev/helm-index/rocketchat-1.0.0.tgz
+    - https://charts.naphtha.dev/rocketchat-1.0.0.tgz
     version: 1.0.0
-generated: "2026-04-17T15:21:43.060511703+03:00"
+generated: "2026-04-17T16:18:26.36161528+03:00"
