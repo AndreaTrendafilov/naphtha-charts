@@ -1,15 +1,11 @@
 apiVersion: v2
 name: rocketchat
-version: 0.1.0
-description: Rocket.Chat umbrella chart
-
-# We will consume the upstream chart via dependencies
-# Official chart: https://github.com/RocketChat/helm-charts/tree/main/charts/rocketchat
-
+description: Rocket.Chat via official upstream chart (naphtha defaults)
 type: application
-appVersion: "6"
+version: 1.0.0
+appVersion: "8.2.0"
 
 dependencies:
   - name: rocketchat
-    version: 5.11.2
+    version: 6.32.1
     repository: https://rocketchat.github.io/helm-charts

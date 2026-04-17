@@ -1,56 +1,42 @@
+# Values passed to the upstream `rocketchat` subchart (Chart.yaml dependency).
+# Upstream reference: https://github.com/RocketChat/helm-charts
 rocketchat:
+  image:
+    repository: registry.rocket.chat/rocketchat/rocket.chat
+    tag: "8.2.0"
+    pullPolicy: IfNotPresent
+
   replicaCount: 1
 
-  image:
-    repository: rocketchat/rocket.chat
-    tag: "6.8.7"
-    pullPolicy: IfNotPresent
+  host: chat.naphtha.dev
 
   ingress:
     enabled: true
-    className: "traefik"
+    ingressClassName: traefik
+    pathType: Prefix
+    path: /
     annotations:
-      kubernetes.io/ingress.class: "traefik"
-      cert-manager.io/cluster-issuer: "letsencrypt-prod"
-      traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
       traefik.ingress.kubernetes.io/router.tls: "true"
-    hosts:
-      - host: "chat.naphtha.dev"
-        paths:
-          - path: /
-            pathType: Prefix
     tls:
       - secretName: rocketchat-tls
         hosts:
-          - "chat.naphtha.dev"
+          - chat.naphtha.dev
 
-  service:
-    type: ClusterIP
-    port: 80
-
-  resources: {}
-
-  # Persistence for uploads and data
   persistence:
     enabled: true
-    existingClaim: ""
-    storageClass: ""
-    accessModes: ["ReadWriteOnce"]
+    accessMode: ReadWriteOnce
     size: 10Gi
 
-  # MongoDB subchart (Bitnami) values used by upstream chart dependency
   mongodb:
     enabled: true
     architecture: replicaset
-    replicaCount: 3
+    replicaCount: 1
     auth:
       enabled: true
-      rootUser: root
-      rootPassword: "CHANGE_ME_root"
       usernames:
         - rocketchat
-      passwords:
-        - "CHANGE_ME_password"
       databases:
         - rocketchat
     persistence:
@@ -58,21 +44,3 @@ rocketchat:
       size: 20Gi
     arbiter:
       enabled: false
-
-  # host URL and site URL config
-  host:
-    name: "chat.naphtha.dev"
-
-  extraEnv:
-    - name: ROOT_URL
-      value: "https://chat.naphtha.dev"
-    - name: MONGO_URL
-      valueFrom:
-        secretKeyRef:
-          name: rocketchat-mongodb
-          key: mongodb-url
-    - name: MONGO_OPLOG_URL
-      valueFrom:
-        secretKeyRef:
-          name: rocketchat-mongodb
-          key: mongodb-oplog-url

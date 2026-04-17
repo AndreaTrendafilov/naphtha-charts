@@ -1,13 +1,27 @@
 apiVersion: v1
 entries:
+  jellyfin:
+  - apiVersion: v2
+    appVersion: 10.10.7
+    created: "2026-04-17T14:52:12.807416742+03:00"
+    description: Jellyfin media server
+    digest: 84a549e0417fb72df7f279b0759cc0795b1256fff0b970987d69fb3ecee10e28
+    home: https://jellyfin.org/
+    name: jellyfin
+    sources:
+    - https://github.com/jellyfin/jellyfin
+    type: application
+    urls:
+    - https://naphtha.dev/charts/jellyfin-1.0.0.tgz
+    version: 1.0.0
   migrations-operator:
   - annotations:
       helm.sh/resource-policy: keep
     apiVersion: v2
     appVersion: 1.2.5
-    created: "2026-04-17T14:46:43.452358956+03:00"
+    created: "2026-04-17T14:52:12.807853658+03:00"
     description: Kubernetes operator to manage database migrations
-    digest: ce5514a48498bad5e84312ee721e2b167dcd60a1631ba415f854bcb28584b031
+    digest: ed07fbd8c7c0b83ae186ea2ac30452d661bfddb6bba707267d4a0b218484ab0f
     home: https://github.com/AndreaTrendafilov/migrations-operator
     kubeVersion: '>= 1.24.0-0'
     maintainers:
@@ -19,4 +33,19 @@ entries:
     urls:
     - https://naphtha.dev/charts/migrations-operator-1.0.1.tgz
     version: 1.0.1
-generated: "2026-04-17T14:46:43.451635895+03:00"
+  rocketchat:
+  - apiVersion: v2
+    appVersion: 8.2.0
+    created: "2026-04-17T14:52:12.827644276+03:00"
+    dependencies:
+    - name: rocketchat
+      repository: https://rocketchat.github.io/helm-charts
+      version: 6.32.1
+    description: Rocket.Chat via official upstream chart (naphtha defaults)
+    digest: 01487cd714c4931b2469a20d98b28e11aff04ca5f927666323c2b568a69cfddb
+    name: rocketchat
+    type: application
+    urls:
+    - https://naphtha.dev/charts/rocketchat-1.0.0.tgz
+    version: 1.0.0
+generated: "2026-04-17T14:52:12.806913863+03:00"

@@ -1,0 +1,6 @@
+dependencies:
+- name: rocketchat
+  repository: https://rocketchat.github.io/helm-charts
+  version: 6.32.1
+digest: sha256:420d4ddefebcd7d1ada2f490d77336a58761e173986cb0edba25f16099bdf217
+generated: "2026-04-17T14:51:23.685269684+03:00"
