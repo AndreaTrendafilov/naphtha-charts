@@ -1,17 +1,16 @@
 /**
  * Serves Helm index + .tgz from GitHub raw .../main/helm-index/<file>.
  *
- * Two URL shapes (see CHARTS_HOSTNAME in wrangler.toml):
- * - https://charts.example.com/index.yaml  (recommended if apex is Cloudflare Pages)
- * - https://example.com/charts/index.yaml  (only if a Worker route wins over Pages)
+ * URL shapes (this Worker should only be bound to charts.naphtha.dev and *.workers.dev):
+ * - https://charts.naphtha.dev/index.yaml  (what `helm repo add https://charts.naphtha.dev` uses)
+ * - https://charts.naphtha.dev/*.tgz
+ * - https://<worker>.workers.dev/charts/index.yaml  (path style for quick tests)
  */
 
 export interface Env {
   GITHUB_OWNER: string;
   GITHUB_REPO: string;
   GITHUB_BRANCH: string;
-  /** e.g. charts.naphtha.dev — if set, / and /index.yaml / *.tgz are served here */
-  CHARTS_HOSTNAME: string;
 }
 
 export default {
@@ -25,7 +24,7 @@ export default {
     }
 
     const url = new URL(request.url);
-    const filename = resolveFilename(url, env.CHARTS_HOSTNAME);
+    const filename = resolveFilename(url);
     if (!filename) {
       return new Response("Not Found", { status: 404 });
     }
@@ -80,43 +79,45 @@ function contentType(filename: string): string {
 }
 
 /**
- * Dedicated charts host (bypasses Pages on apex): charts.naphtha.dev/index.yaml
- * Path host: naphtha.dev/charts/index.yaml (needs Worker route above Pages)
+ * 1) /charts/<file> — works on *.workers.dev and apex routes
+ * 2) /, /index.yaml, /<name>.tgz — Helm repo URL is scheme://host with no path,
+ *    so clients request /index.yaml at the Worker hostname
  */
-function resolveFilename(url: URL, chartsHostname: string): string | null {
-  const host = url.hostname.toLowerCase();
+function resolveFilename(url: URL): string | null {
   const path = url.pathname;
 
-  const dedicated =
-    chartsHostname && host === chartsHostname.trim().toLowerCase();
-  if (dedicated) {
-    if (path === "/" || path === "") {
-      return "index.yaml";
-    }
-    const name = path.startsWith("/") ? path.slice(1) : path;
+  if (path.startsWith("/charts/")) {
+    const fn = path.slice("/charts/".length);
     if (
-      !name ||
-      name.includes("/") ||
-      name.includes("..") ||
-      name.startsWith(".")
+      !fn ||
+      fn.includes("/") ||
+      fn.includes("..") ||
+      fn.startsWith(".")
     ) {
       return null;
     }
-    return name;
+    return fn;
   }
 
-  const prefix = "/charts/";
-  if (!path.startsWith(prefix)) {
+  if (path === "/" || path === "") {
+    return "index.yaml";
+  }
+
+  const m = /^\/([^/]+)$/.exec(path);
+  if (!m) {
     return null;
   }
-  const fn = path.slice(prefix.length);
+  const name = m[1];
+  if (name.includes("..") || name.startsWith(".")) {
+    return null;
+  }
   if (
-    !fn ||
-    fn.includes("/") ||
-    fn.includes("..") ||
-    fn.startsWith(".")
+    name === "index.yaml" ||
+    name.endsWith(".yaml") ||
+    name.endsWith(".yml") ||
+    name.endsWith(".tgz")
   ) {
-    return null;
+    return name;
   }
-  return fn;
+  return null;
 }
