@@ -10,15 +10,23 @@ Helm chart sources for [naphtha.dev](https://naphtha.dev/). All charts live unde
 
 ## Use the Helm repository
 
-Serve **`helm-index/`** at **`https://naphtha.dev/charts/`** so these URLs work:
-
-- `https://naphtha.dev/charts/index.yaml`
-- `https://naphtha.dev/charts/*.tgz`
+**Canonical URL (Worker + dedicated hostname):**
 
 ```bash
-helm repo add naphtha https://naphtha.dev/charts
+helm repo add naphtha https://charts.naphtha.dev
 helm repo update
 helm search repo naphtha
+```
+
+- Index: `https://charts.naphtha.dev/index.yaml`
+- Charts: `https://charts.naphtha.dev/<chart>-<version>.tgz`
+
+**Why not `https://naphtha.dev/charts`?** If the apex `naphtha.dev` is **Cloudflare Pages** (or a SPA), it usually owns **all paths**, so `/charts/index.yaml` returns your HTML shell — not YAML. A **subdomain** (`charts.naphtha.dev`) is attached only to this Worker, so Helm gets real files.
+
+**Fallback (no Worker / DNS yet):** use GitHub raw:
+
+```bash
+helm repo add naphtha 'https://raw.githubusercontent.com/AndreaTrendafilov/naphtha-charts/main/helm-index'
 ```
 
 ## Work on a chart
@@ -26,44 +34,31 @@ helm search repo naphtha
 Edit sources under `charts/<name>/`, then refresh packages and the repo index:
 
 ```bash
-# Rocket.Chat: refresh upstream dependency when bumping Chart.yaml
-helm dependency update charts/rocketchat
-
 helm package charts/migrations-operator -d helm-index
 helm package charts/jellyfin -d helm-index
 helm package charts/rocketchat -d helm-index
-helm repo index helm-index --url https://naphtha.dev/charts
+helm repo index helm-index --url https://charts.naphtha.dev
 ```
 
 Commit `charts/` and `helm-index/` together.
 
-## Publish `helm-index` at `https://naphtha.dev/charts` (Cloudflare Worker)
+## Cloudflare Worker (`charts.naphtha.dev`)
 
-The repo includes a small **Cloudflare Worker** (`workers/helm-charts-proxy/`) that proxies:
+The Worker (`workers/helm-charts-proxy/`) proxies to:
 
-`https://naphtha.dev/charts/<file>` → `https://raw.githubusercontent.com/AndreaTrendafilov/naphtha-charts/main/helm-index/<file>`
+`https://raw.githubusercontent.com/AndreaTrendafilov/naphtha-charts/main/helm-index/<file>`
 
-So you **do not** upload tarballs to R2 or Pages: after you push `helm-index/` to `main`, clients see new charts (subject to short CDN cache on `index.yaml`). No separate “publish index” step beyond `git push`.
+After you push `helm-index/` to `main`, clients see new charts (short cache on `index.yaml`).
 
-### One-time Cloudflare setup
+### One-time setup
 
-1. Create an **API token** with *Edit Cloudflare Workers* (and account read). Add repo secrets:
-   - `CLOUDFLARE_API_TOKEN`
-   - `CLOUDFLARE_ACCOUNT_ID` (Workers overview in the dashboard)
-2. Run **Deploy Helm charts worker** (GitHub Actions) or locally:
+1. **API token** with Workers edit + repo secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
+2. **Deploy** the Worker (GitHub Action **Deploy Helm charts worker** or `cd workers/helm-charts-proxy && npm ci && npx wrangler deploy`).
+3. **Custom domain on the Worker** (not only a route on apex):
+   - Workers & Pages → **naphtha-helm-charts-proxy** → **Settings** → **Domains & Routes** → **Add** → **Custom domain** → `charts.naphtha.dev`
+   - Cloudflare DNS should get the required record automatically (proxied).
 
-   ```bash
-   cd workers/helm-charts-proxy
-   npm ci
-   npx wrangler login   # or use CLOUDFLARE_API_TOKEN in env
-   npx wrangler deploy
-   ```
-
-3. **Attach a route** so only `/charts` hits this worker (leave the rest of `naphtha.dev` on Pages or your current host):
-   - Workers & Pages → `naphtha-helm-charts-proxy` → **Triggers** → **Add route** → `naphtha.dev/charts*`
-   - Put this route **above** a catch-all `naphtha.dev/*` if you use multiple workers.
-
-The workflow `.github/workflows/deploy-helm-worker.yml` deploys the worker when `workers/helm-charts-proxy/**` changes.
+Optional: apex path `naphtha.dev/charts/*` only works if a **Worker route** is evaluated **before** Pages for that path; subdomains avoid that fight.
 
 ### Changing GitHub org/repo/branch
 

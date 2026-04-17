@@ -1,14 +1,17 @@
 /**
- * Serves https://naphtha.dev/charts/<file> from GitHub raw:
- * .../main/helm-index/<file>
+ * Serves Helm index + .tgz from GitHub raw .../main/helm-index/<file>.
  *
- * After you push updated helm-index/ to main, Helm clients see changes within cache TTL.
+ * Two URL shapes (see CHARTS_HOSTNAME in wrangler.toml):
+ * - https://charts.example.com/index.yaml  (recommended if apex is Cloudflare Pages)
+ * - https://example.com/charts/index.yaml  (only if a Worker route wins over Pages)
  */
 
 export interface Env {
   GITHUB_OWNER: string;
   GITHUB_REPO: string;
   GITHUB_BRANCH: string;
+  /** e.g. charts.naphtha.dev — if set, / and /index.yaml / *.tgz are served here */
+  CHARTS_HOSTNAME: string;
 }
 
 export default {
@@ -22,18 +25,8 @@ export default {
     }
 
     const url = new URL(request.url);
-    const prefix = "/charts/";
-    if (!url.pathname.startsWith(prefix)) {
-      return new Response("Not Found", { status: 404 });
-    }
-
-    const filename = url.pathname.slice(prefix.length);
-    if (
-      !filename ||
-      filename.includes("/") ||
-      filename.includes("..") ||
-      filename.startsWith(".")
-    ) {
+    const filename = resolveFilename(url, env.CHARTS_HOSTNAME);
+    if (!filename) {
       return new Response("Not Found", { status: 404 });
     }
 
@@ -84,4 +77,46 @@ function contentType(filename: string): string {
     return "text/yaml; charset=utf-8";
   }
   return "application/octet-stream";
+}
+
+/**
+ * Dedicated charts host (bypasses Pages on apex): charts.naphtha.dev/index.yaml
+ * Path host: naphtha.dev/charts/index.yaml (needs Worker route above Pages)
+ */
+function resolveFilename(url: URL, chartsHostname: string): string | null {
+  const host = url.hostname.toLowerCase();
+  const path = url.pathname;
+
+  const dedicated =
+    chartsHostname && host === chartsHostname.trim().toLowerCase();
+  if (dedicated) {
+    if (path === "/" || path === "") {
+      return "index.yaml";
+    }
+    const name = path.startsWith("/") ? path.slice(1) : path;
+    if (
+      !name ||
+      name.includes("/") ||
+      name.includes("..") ||
+      name.startsWith(".")
+    ) {
+      return null;
+    }
+    return name;
+  }
+
+  const prefix = "/charts/";
+  if (!path.startsWith(prefix)) {
+    return null;
+  }
+  const fn = path.slice(prefix.length);
+  if (
+    !fn ||
+    fn.includes("/") ||
+    fn.includes("..") ||
+    fn.startsWith(".")
+  ) {
+    return null;
+  }
+  return fn;
 }
