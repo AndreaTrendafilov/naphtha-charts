@@ -2,8 +2,8 @@ apiVersion: v2
 name: jellyfin
 description: Jellyfin media server
 type: application
-version: 1.0.2
-appVersion: "10.11.9"
+version: 1.0.3
+appVersion: "10.11.10"
 home: https://jellyfin.org/
 sources:
   - https://github.com/jellyfin/jellyfin
