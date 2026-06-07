@@ -3,13 +3,13 @@ entries:
   cert-manager:
   - apiVersion: v2
     appVersion: v1.20.2
-    created: "2026-05-25T03:25:21.143680272Z"
+    created: "2026-06-07T03:25:08.977690481Z"
     dependencies:
     - name: cert-manager
       repository: https://charts.jetstack.io
       version: v1.20.2
     description: Umbrella over upstream `cert-manager` (naphtha defaults)
-    digest: 5f6c82b81bba2366fe6a79cf25b3d60bcf7e09779b278d38caefe5505e191ca4
+    digest: db11004004689e77a90448e5d457fcf738e25da4293cfc150454bfe73a8a8717
     name: cert-manager
     type: application
     urls:
@@ -18,13 +18,13 @@ entries:
   cloudnative-pg:
   - apiVersion: v2
     appVersion: 0.28.0
-    created: "2026-05-25T03:25:21.149900838Z"
+    created: "2026-06-07T03:25:08.985025246Z"
     dependencies:
     - name: cloudnative-pg
       repository: https://cloudnative-pg.github.io/charts
       version: 0.28.0
     description: Umbrella over upstream `cloudnative-pg` (naphtha defaults)
-    digest: 847433b64f88a21a0d58d7438cd9b7ed99668088d9a759da632d1e12b503255b
+    digest: 7384b296902fd41e039dc27c8451f4dafc4ec77326e7c684d65c7989c52c9004
     name: cloudnative-pg
     type: application
     urls:
@@ -33,13 +33,13 @@ entries:
   external-dns:
   - apiVersion: v2
     appVersion: 1.20.0
-    created: "2026-05-25T03:25:21.151188363Z"
+    created: "2026-06-07T03:25:08.986534017Z"
     dependencies:
     - name: external-dns
       repository: https://kubernetes-sigs.github.io/external-dns/
       version: 1.20.0
     description: Umbrella over upstream `external-dns` (naphtha defaults)
-    digest: f8df510b370638f7cd4f96a9381e7aff742346bb2ccf1710f10176b66e0ef24a
+    digest: 84851fe45a7d71cb36981bbda6be40599fe2bfb622c5e2051adcd33f83c1e2f8
     name: external-dns
     type: application
     urls:
@@ -48,13 +48,13 @@ entries:
   external-secrets:
   - apiVersion: v2
     appVersion: 2.3.0
-    created: "2026-05-25T03:25:21.157793075Z"
+    created: "2026-06-07T03:25:08.994421292Z"
     dependencies:
     - name: external-secrets
       repository: https://charts.external-secrets.io
       version: 2.3.0
     description: Umbrella over upstream `external-secrets` (naphtha defaults)
-    digest: 7dabdf30d73d40e519578550bc61b28168052180e302b265973b207456c910eb
+    digest: 8f64438174a05bf10486f8df53fd5126dec6ae62d8af2bf8cf5eff57e90469b4
     name: external-secrets
     type: application
     urls:
@@ -63,14 +63,14 @@ entries:
   home-assistant:
   - apiVersion: v2
     appVersion: 2026.4.2
-    created: "2026-05-25T03:25:21.159114881Z"
+    created: "2026-06-07T03:25:08.995788343Z"
     dependencies:
     - name: home-assistant
       repository: http://pajikos.github.io/home-assistant-helm-chart
       version: 0.3.54
     description: Umbrella over pajikos Home Assistant Helm chart (naphtha defaults;
       common TrueNAS-style app)
-    digest: ec5aa0a397de68488b4f6d854371f2c99bbb1cf92c1a548af276f07e2e109d15
+    digest: d84fe1cb6d65cb299c86e3c9304f877f653b99eb908c17cec2c7ab5db512c818
     name: home-assistant
     type: application
     urls:
@@ -79,13 +79,13 @@ entries:
   ingress-nginx:
   - apiVersion: v2
     appVersion: 4.15.1
-    created: "2026-05-25T03:25:21.163663413Z"
+    created: "2026-06-07T03:25:09.00055924Z"
     dependencies:
     - name: ingress-nginx
       repository: https://kubernetes.github.io/ingress-nginx
       version: 4.15.1
     description: Umbrella over upstream `ingress-nginx` (naphtha defaults)
-    digest: b924753e35d71ad2d49fea04ced0dede5ba984e25ca69a55e6b16c79eae98140
+    digest: 92d28ccbb656cc01e4ca688cf2c1c16edcc63737acb0701754c467ddaa38f8b8
     name: ingress-nginx
     type: application
     urls:
@@ -94,13 +94,13 @@ entries:
   jaeger:
   - apiVersion: v2
     appVersion: 4.7.0
-    created: "2026-05-25T03:25:21.16578996Z"
+    created: "2026-06-07T03:25:09.002941218Z"
     dependencies:
     - name: jaeger
       repository: https://jaegertracing.github.io/helm-charts
       version: 4.7.0
     description: Umbrella over upstream `jaeger` (naphtha defaults)
-    digest: 0f2ad5c967ebfd820a7c7027d6595ab2fba283af1ba3a3284615fc4ed01df2a7
+    digest: 9933ecd5e97e7b4662429aac6cacf2032f9c81cdb5abc65982075280558f709a
     name: jaeger
     type: application
     urls:
@@ -108,8 +108,21 @@ entries:
     version: 1.0.0
   jellyfin:
   - apiVersion: v2
+    appVersion: 10.11.11
+    created: "2026-06-07T03:25:09.004079739Z"
+    description: Jellyfin media server
+    digest: 2dbb7ce9884136914a18326a726ff39debf8f4f0bbb5029d6bf034f2a69de27a
+    home: https://jellyfin.org/
+    name: jellyfin
+    sources:
+    - https://github.com/jellyfin/jellyfin
+    type: application
+    urls:
+    - https://charts.naphtha.dev/jellyfin-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v2
     appVersion: 10.11.10
-    created: "2026-05-25T03:25:21.166604744Z"
+    created: "2026-06-07T03:25:09.003820724Z"
     description: Jellyfin media server
     digest: 012496994f9e24acad1d678959f456b6a800b8b55dd96382e9968067fe8be8bd
     home: https://jellyfin.org/
@@ -122,7 +135,7 @@ entries:
     version: 1.0.3
   - apiVersion: v2
     appVersion: 10.11.9
-    created: "2026-05-25T03:25:21.166343442Z"
+    created: "2026-06-07T03:25:09.003550914Z"
     description: Jellyfin media server
     digest: 2bb7d1c1f3c7c80c85f0a8a81de76c9f5a1fcdeb6d614cff856b36664ac0e643
     home: https://jellyfin.org/
@@ -135,7 +148,7 @@ entries:
     version: 1.0.2
   - apiVersion: v2
     appVersion: 10.11.8
-    created: "2026-05-25T03:25:21.16606931Z"
+    created: "2026-06-07T03:25:09.003233512Z"
     description: Jellyfin media server
     digest: 9a8c369dfad58175592774a8cbe6304f5dd3dffc458a8ca23a9cecfe175a3d82
     home: https://jellyfin.org/
@@ -149,13 +162,13 @@ entries:
   k8ssandra-operator:
   - apiVersion: v2
     appVersion: 1.31.0
-    created: "2026-05-25T03:25:21.184360011Z"
+    created: "2026-06-07T03:25:09.020737899Z"
     dependencies:
     - name: k8ssandra-operator
       repository: https://helm.k8ssandra.io/stable
       version: 1.31.0
     description: Umbrella over upstream `k8ssandra-operator` (naphtha defaults)
-    digest: 68533e1df1e3e59055746de4f264f14741998a213adb1c8d25c512e515e950b6
+    digest: 20e31e23fe4e4908f3e4f0dbf9a6627a44c0990fcf6f8e100295851e2cfc1270
     name: k8ssandra-operator
     type: application
     urls:
@@ -164,13 +177,13 @@ entries:
   kube-prometheus-stack:
   - apiVersion: v2
     appVersion: 83.5.1
-    created: "2026-05-25T03:25:21.213865038Z"
+    created: "2026-06-07T03:25:09.050031657Z"
     dependencies:
     - name: kube-prometheus-stack
       repository: https://prometheus-community.github.io/helm-charts
       version: 83.5.1
     description: Umbrella over upstream `kube-prometheus-stack` (naphtha defaults)
-    digest: 2693aa25905d57af816476ba8d228917714a2283502ff6a42912d52e04b0f08a
+    digest: 53250320534ab8309bf863cffc4e0876b05719cb5a718aaaa687c84b54884d0d
     name: kube-prometheus-stack
     type: application
     urls:
@@ -179,14 +192,14 @@ entries:
   kubevirt:
   - apiVersion: v2
     appVersion: v1.7.0
-    created: "2026-05-25T03:25:21.216650014Z"
+    created: "2026-06-07T03:25:09.052690406Z"
     dependencies:
     - name: kubevirt
       repository: https://encircle360-oss.github.io/helm-charts/
       version: 0.2.0
     description: Umbrella over encircle360 KubeVirt Helm chart (community; installs
       KubeVirt operator)
-    digest: c0912e35ca16d4e55659c0a2124fb185c43480ba4f4faeeda710c150694eb04c
+    digest: 53b308c848ce678d0a6e54bdfc2901ae869cce50914e9959af4ce62ee671d283
     name: kubevirt
     type: application
     urls:
@@ -195,13 +208,13 @@ entries:
   loki:
   - apiVersion: v2
     appVersion: 6.55.0
-    created: "2026-05-25T03:25:21.229994646Z"
+    created: "2026-06-07T03:25:09.066124822Z"
     dependencies:
     - name: loki
       repository: https://grafana.github.io/helm-charts
       version: 6.55.0
     description: Umbrella over upstream `loki` (naphtha defaults)
-    digest: 501198a2ea20bf0458cdc366a6d9c6aaaf31bbfca283ad6de6af216206e722f7
+    digest: b3152eb5e13e0a730b166cdf98c83527fe9ef1e96226026f5688173977ff05d8
     name: loki
     type: application
     urls:
@@ -212,9 +225,9 @@ entries:
       helm.sh/resource-policy: keep
     apiVersion: v2
     appVersion: 1.2.5
-    created: "2026-05-25T03:25:21.230373436Z"
+    created: "2026-06-07T03:25:09.066529272Z"
     description: Kubernetes operator to manage database migrations
-    digest: f104674e38dd869375fae1a05eb5465109589c197ba1728e71b82e9a5835a98e
+    digest: 334e55e0087753fccfda15332f75478b671b1ad079cd56efc623ede92449a91d
     home: https://github.com/AndreaTrendafilov/migrations-operator
     kubeVersion: '>= 1.24.0-0'
     maintainers:
@@ -229,13 +242,13 @@ entries:
   minio-operator:
   - apiVersion: v2
     appVersion: 7.1.1
-    created: "2026-05-25T03:25:21.231256904Z"
+    created: "2026-06-07T03:25:09.067449349Z"
     dependencies:
     - name: operator
       repository: https://operator.min.io
       version: 7.1.1
     description: Umbrella over upstream `operator` (naphtha defaults)
-    digest: 0546cec05c50499c942d6b9666236e9542bbbc30e1b1f5f6e4666b278a233574
+    digest: 46c1cc320a112f7c377dfea90e5c3ed00c4b8b94f1491ce4475b15759076cf30
     name: minio-operator
     type: application
     urls:
@@ -244,13 +257,13 @@ entries:
   mongodb-community-operator:
   - apiVersion: v2
     appVersion: 0.13.0
-    created: "2026-05-25T03:25:21.23272504Z"
+    created: "2026-06-07T03:25:09.068201466Z"
     dependencies:
     - name: community-operator
       repository: https://mongodb.github.io/helm-charts
       version: 0.13.0
     description: Umbrella over upstream `community-operator` (naphtha defaults)
-    digest: a020b914f4a0b2413086bb447956cad15de991ffb1eb4675f4aef8081a7a8837
+    digest: de600ec27f2b61cd9653d67adac97b5b541d095ade3f3dd1dbe4c2f6d5d07f14
     name: mongodb-community-operator
     type: application
     urls:
@@ -259,13 +272,13 @@ entries:
   nats:
   - apiVersion: v2
     appVersion: 2.12.6
-    created: "2026-05-25T03:25:21.234387479Z"
+    created: "2026-06-07T03:25:09.070750453Z"
     dependencies:
     - name: nats
       repository: https://nats-io.github.io/k8s/helm/charts/
       version: 2.12.6
     description: Umbrella over upstream `nats` (naphtha defaults)
-    digest: 50c7501c0eb3ce65b97e9dccc707da12b5608a1d3d0f80c267f50672f5019f51
+    digest: 2135a7e17c367cca634cf30c14f247912872c8963bae03ab83e688da1427588b
     name: nats
     type: application
     urls:
@@ -274,14 +287,14 @@ entries:
   nextcloud:
   - apiVersion: v2
     appVersion: 33.0.2
-    created: "2026-05-25T03:25:21.253943833Z"
+    created: "2026-06-07T03:25:09.093196474Z"
     dependencies:
     - name: nextcloud
       repository: https://nextcloud.github.io/helm
       version: 9.0.5
     description: Umbrella over upstream Nextcloud Helm chart (naphtha defaults; common
       TrueNAS-style app)
-    digest: c91c443a19a3c5a6dd84152fc408193898a80c4667b240cbd19dd0efa2fdd939
+    digest: c92be80a3bb13367e04fd8b95441ddbe8403aae1ecd78ceea6eb4c5a4a5d17e8
     name: nextcloud
     type: application
     urls:
@@ -290,13 +303,13 @@ entries:
   opensearch:
   - apiVersion: v2
     appVersion: 3.6.0
-    created: "2026-05-25T03:25:21.255958917Z"
+    created: "2026-06-07T03:25:09.094784193Z"
     dependencies:
     - name: opensearch
       repository: https://opensearch-project.github.io/helm-charts/
       version: 3.6.0
     description: Umbrella over upstream `opensearch` (naphtha defaults)
-    digest: 2c0c6b3b76b558b7ff72625de64146c9ac6dba9bab21daeef50dfe6f9b1e28af
+    digest: b328420adb64a24d3a7c4e3adb594f4fb184f6f8289ad95b9ee658f40aac0f66
     name: opensearch
     type: application
     urls:
@@ -305,13 +318,13 @@ entries:
   percona-pxc-operator:
   - apiVersion: v2
     appVersion: 1.19.1
-    created: "2026-05-25T03:25:21.259817276Z"
+    created: "2026-06-07T03:25:09.097020695Z"
     dependencies:
     - name: pxc-operator
       repository: https://percona.github.io/percona-helm-charts/
       version: 1.19.1
     description: Umbrella over upstream `pxc-operator` (naphtha defaults)
-    digest: 4448a328b69654b749eaf2b78dd034409ee0430f91feb20ecccbd11e0f4b3334
+    digest: 509063d0c9d6e8edfec97c5351fc848772a64a92b6374b4d26b6ce50485b2b98
     name: percona-pxc-operator
     type: application
     urls:
@@ -320,14 +333,14 @@ entries:
   plex:
   - apiVersion: v2
     appVersion: 1.43.1
-    created: "2026-05-25T03:25:21.260564479Z"
+    created: "2026-06-07T03:25:09.097686554Z"
     dependencies:
     - name: plex
       repository: https://charts.alekc.dev
       version: 2.9.1
     description: Umbrella over alekc Plex Helm chart (naphtha defaults; common TrueNAS-style
       app)
-    digest: 84f7e2c8500592cac4168d536be5c38af96e1f5cf0fc46fe5e156ccd8afe4ea7
+    digest: 915c29e3f6c776f57ef86fa2251b85fad3a1f07a2cb1c8386bff7f7c8e29cdd5
     name: plex
     type: application
     urls:
@@ -336,13 +349,13 @@ entries:
   pulsar:
   - apiVersion: v2
     appVersion: 4.5.0
-    created: "2026-05-25T03:25:21.300533174Z"
+    created: "2026-06-07T03:25:09.1405409Z"
     dependencies:
     - name: pulsar
       repository: https://pulsar.apache.org/charts
       version: 4.5.0
     description: Umbrella over upstream `pulsar` (naphtha defaults)
-    digest: 21e8c0a7ee6bf28a7dcbc4374d3edec382dacaeacc96d7d4c182029c7ce54040
+    digest: c0e21f6451814a6ef6f4fdcf3d5ddc601215aa01db4b5131bfb7b4663a93e15c
     name: pulsar
     type: application
     urls:
@@ -351,13 +364,13 @@ entries:
   rocketchat:
   - apiVersion: v2
     appVersion: 8.3.2
-    created: "2026-05-25T03:25:21.312653766Z"
+    created: "2026-06-07T03:25:09.152368419Z"
     dependencies:
     - name: rocketchat
       repository: https://rocketchat.github.io/helm-charts
       version: 6.32.1
     description: Rocket.Chat via official upstream chart (naphtha defaults)
-    digest: 2888e9466fc33aa5f03c63638d41c6b3c91ed31eae17993b19735bf8de976f4f
+    digest: 2aa9f328d91cd2c9f96b33188ac61a66a83a5ba5ee425c8039fba68f65825870
     name: rocketchat
     type: application
     urls:
@@ -366,13 +379,13 @@ entries:
   strimzi-kafka-operator:
   - apiVersion: v2
     appVersion: 0.51.0
-    created: "2026-05-25T03:25:21.319758805Z"
+    created: "2026-06-07T03:25:09.157798345Z"
     dependencies:
     - name: strimzi-kafka-operator
       repository: oci://quay.io/strimzi-helm
       version: 0.51.0
     description: Umbrella over upstream `strimzi-kafka-operator` (naphtha defaults)
-    digest: 1aa4697733349856aedbb338145acc04879fe85a75a128fe8094c38294dbe4fe
+    digest: 14744d457e174b0e973dac2f50543e67f70cd318549195ce88e19e1b320686eb
     name: strimzi-kafka-operator
     type: application
     urls:
@@ -381,13 +394,13 @@ entries:
   tempo:
   - apiVersion: v2
     appVersion: 1.24.4
-    created: "2026-05-25T03:25:21.320851918Z"
+    created: "2026-06-07T03:25:09.158900041Z"
     dependencies:
     - name: tempo
       repository: https://grafana.github.io/helm-charts
       version: 1.24.4
     description: Umbrella over upstream `tempo` (naphtha defaults)
-    digest: 4a3f14c523fb43ddfe97b3f20968435ec0800bd8d2ce011ff615eaba136639e6
+    digest: 2745ad7770204bf681d25255a2c769868b14f2796638d493b33eb7a090e2882d
     name: tempo
     type: application
     urls:
@@ -396,16 +409,16 @@ entries:
   traefik:
   - apiVersion: v2
     appVersion: 39.0.8
-    created: "2026-05-25T03:25:21.331715933Z"
+    created: "2026-06-07T03:25:09.169234251Z"
     dependencies:
     - name: traefik
       repository: https://traefik.github.io/charts
       version: 39.0.8
     description: Umbrella over upstream `traefik` (naphtha defaults)
-    digest: b1bf427fa26470def72da15057f0007d89e3f4a01ff4df721af3b592c3ca404b
+    digest: d1a14457e7bd5c867bdebc6f07c9102dac142bcdffee5cc66c88ed772b3bedf5
     name: traefik
     type: application
     urls:
     - https://charts.naphtha.dev/traefik-1.0.0.tgz
     version: 1.0.0
-generated: "2026-05-25T03:25:21.137727155Z"
+generated: "2026-06-07T03:25:08.971424784Z"
